@@ -18,7 +18,7 @@
 ##### run options
 #########################
 
-'job_name': ['inverted_pendulum'],
+'job_name': ['reacher'],
 'seed': [0],
 
 #########################
@@ -26,9 +26,9 @@
 #########################
 
 ## env
-'env_name': ['pddm_furuta_inverted_pendulum-v0'],
+'env_name': ['pddm_reacher-v0'],
 'rollout_length': [500],
-'num_iters': [30],
+'num_iters': [10],
 'num_trajectories_per_iter': [10],
 
 ## continue
@@ -88,7 +88,7 @@
 ## MPC
 'horizon': [20],
 'num_control_samples': [500],
-'controller_type': ['mppi'],
+'controller_type': ['rand'],
 
 ## cem
 'cem_max_iters': [3],

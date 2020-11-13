@@ -14,7 +14,8 @@ from pddm.utils.helper_funcs import do_groundtruth_rollout
 from pddm.utils.helper_funcs import turn_acs_into_acsK
 from pddm.utils.calculate_costs import calculate_costs
 import re
-
+import os
+import time
 #hamada added
 
 
@@ -39,6 +40,8 @@ def state_prediction_inverted_pendulum(env,reward_func,resulting_states_list,all
         elif str(
                 type(env.env.env)) == '<class \'pddm.envs.cheetah.cheetah.HalfCheetahEnv\'>':
             indices_to_vis = [0, 1, 2, 3, 4,5,6,7,8,9]
+        elif re.findall('R.?e', str(type(env.env.env))):
+            indices_to_vis = [4,5,6,7,8,9 ]
 
         curr_plot = 1
         num_plots = len(indices_to_vis)
@@ -49,9 +52,6 @@ def state_prediction_inverted_pendulum(env,reward_func,resulting_states_list,all
             # plt.ylabel(index_state_to_vis)
             for sim_num in (num_sims):
                 true_states = do_groundtruth_rollout(
-                    all_samples[sim_num], env,
-                    starting_fullenvstate, actions_taken_so_far)
-                true_states2 = do_groundtruth_rollout(
                     all_samples[sim_num], env,
                     starting_fullenvstate, actions_taken_so_far)
                 # color = cmap(float(sim_num) / num_sims)
@@ -81,10 +81,12 @@ def state_prediction_inverted_pendulum(env,reward_func,resulting_states_list,all
         plt.tight_layout()
         # plot_sideRollouts = False
 
-
+        save_dir = save_dir + "/{}_mpe/".format(time.strftime("%Y-%m-%d"))
+        if not os.path.isdir(save_dir):
+            os.makedirs(save_dir)
         if plot_sideRollouts:
-            plt.savefig(save_dir + "/test_iter{}_rollout{}_step{}".format(iter, rollout_num, step_number))
-            plt.show()
+            plt.savefig(save_dir + "iter{}_rollout{}_step{}".format(iter, rollout_num, step_number))
+            #plt.show()
             plt.clf()
 
 
@@ -151,8 +153,11 @@ def reward_prediction(env, reward_func, resulting_states_list, all_samples,
     plt.legend(list_of_candidate)
     # plt.legend()
     plt.tight_layout()
+    save_dir = save_dir + "/{}_mpe_reward/".format(time.strftime("%Y-%m-%d"))
+    if not os.path.isdir(save_dir):
+        os.makedirs(save_dir)
     if plot_sideRollouts:
-        plt.savefig(save_dir + "/reward_iter{}_rollout{}_step{}".format(iter, rollout_num, step_number))
+        plt.savefig(save_dir + "_iter{}_rollout{}_step{}".format(iter, rollout_num, step_number))
         # plt.show()
         plt.clf()
 
@@ -323,4 +328,23 @@ def get_actual_EEI_kai(observation_list, action_list):
     return final_EEI, final_error, final_energy
 
 
+def get_actual_EEI_reacher(observation, action,previous_Error,previous_Ene,Final_EEI,test_rollout):
 
+    #define EEI
+    tip_xerr= observation[8]
+    tip_yerr = observation[9]
+    arm_angulr_velocity0=observation[6]
+    arm_angulr_velocity1 = observation[7]
+    torque0=action[0]
+    torque1 = action[1]
+
+
+    # calc EEI element #############don't change above
+
+    new_error = tip_xerr ** 2 + tip_yerr ** 2
+    new_energy = np.abs(arm_angulr_velocity0 * torque0) +np.abs(arm_angulr_velocity1 * torque1)
+    total_error = new_error +previous_Error
+    total_energy = new_energy + previous_Ene
+    total_EEI = 1/total_error/total_energy
+
+    return total_EEI, total_error, total_energy

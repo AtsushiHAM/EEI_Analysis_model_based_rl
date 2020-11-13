@@ -88,70 +88,12 @@ class PID_Policy(object):
         ### sample N random candidate action sequences, each of length horizon
         ############################
 
-        np.random.seed()  # to get different action samples for each rollout
-
-        all_samples = []
-        junk = 1
-        for i in range(self.N):
-            sample = []
-            for num in range(self.horizon):
-                sample.append(self.rand_policy.get_action(junk, prev_action=None, random_sampling_params=self.random_sampling_params, hold_action_overrideToOne=True)[0])
-            all_samples.append(np.array(sample))
-        all_samples = np.array(all_samples)
-
-        ########################################################################
-        ### make each action element be (past K actions) instead of just (curr action)
-        ########################################################################
-
-        #all_samples : [N, horizon, ac_dim]
-        all_acs = turn_acs_into_acsK(actions_taken_so_far, all_samples, self.K,
-                                     self.N, self.horizon)
-        #all_acs : [N, horizon, K, ac_dim]
-
-        ############################
-        ### have model predict the result of executing those candidate action sequences
-        ############################
-
-        if self.use_ground_truth_dynamics:
-
-            paths = trajectory_sampler.sample_paths_parallel(
-                self.N,
-                all_samples,
-                actions_taken_so_far,
-                starting_fullenvstate,
-                self.env,
-                suppress_print=True,
-            )  #list of dicts, each w observations/actions/etc.
-
-            #the taken number of paths is num_cpu*(floor(self.N/num_cpu))
-            #rather than self.N, so update parameter accordingly
-            self.N = len(paths)
-            all_samples = all_samples[:self.N]
-
-            resulting_states = [entry['observations'] for entry in paths]
-            resulting_states = np.swapaxes(resulting_states, 0, 1)
-            resulting_states_list = [resulting_states]
-        else:
-
-            resulting_states_list = self.dyn_models.do_forward_sim(
-                [curr_state_K, 0], np.copy(all_acs))
-            resulting_states_list = np.swapaxes(resulting_states_list, 0, 1)  #[ensSize, horizon+1, N, statesize]
-
-        ############################
-        ### evaluate the predicted trajectories
-        ############################
-
-        #calculate costs
-        costs, mean_costs, std_costs = calculate_costs(resulting_states_list, all_samples,
-                                self.reward_func, evaluating, take_exploratory_actions)
-
         theta = curr_state_K[0][1]
         best_action,_= self.pid.update(theta)
         best_action = best_action.reshape([1])
         best_action=np.clip(best_action,-1,1)
 
         #pick worst action sequense added by Hamada
-        worst_sim_number = np.argmax(costs)
         resulting_states_list=[]
 
 

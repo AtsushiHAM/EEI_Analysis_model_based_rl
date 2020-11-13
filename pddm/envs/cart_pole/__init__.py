@@ -16,7 +16,7 @@ from gym.envs.registration import register
 
 register(
     id='pddm_cart_pole-v0',
-    entry_point='pddm.envs.cart_pole.cart_pole:CartPendulumEnv',
+    entry_point='pddm.envs.cart_pole.cart_pole:CartPoleEnv',
     max_episode_steps=1000,
 )
 

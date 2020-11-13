@@ -33,7 +33,7 @@ import pddm.envs
 
 ###added ny hamada
 import re
-os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 def run_eval(args, save_dir):
 
@@ -87,6 +87,8 @@ def run_eval(args, save_dir):
     ###added by hamada
     if re.findall('I.?P', str(type(env.env.env))):
         sim_ver = "inverted_pendulum"
+    elif re.findall('R.?e', str(type(env.env.env))):
+        sim_ver = "reacher"
     else:
         sim_ver ="hello"
 
@@ -115,7 +117,8 @@ def run_eval(args, save_dir):
             params,
             save_dir, args.iter_num,
             sim_ver,
-             args.control_delta)
+             args.control_delta,
+            args.reward_type)
 
         ##############################################
         ### restore the saved dynamics model
@@ -139,8 +142,10 @@ def run_eval(args, save_dir):
         list_rewards = []
         list_scores = []
         rollouts = []
-        if sim_ver=="inverted_pendulum":
+        if sim_ver=="inverted_pendulum" or sim_ver=="reacher":
             list_eeis=[]
+            list_ERss=[]
+            list_ENEss=[]
 
         for rollout_num in range(args.num_eval_rollouts):
 
@@ -163,8 +168,10 @@ def run_eval(args, save_dir):
             #save info from MPC rollout
             list_rewards.append(rollout_info['rollout_rewardTotal'])
             list_scores.append(rollout_info['rollout_meanFinalScore'])
-            if sim_ver == "inverted_pendulum":
+            if sim_ver == "inverted_pendulum" or sim_ver=="reacher":
                 list_eeis.append(rollout_info['Final_EEI'])
+                list_ERss.append(rollout_info['Final_ER'])
+                list_ENEss.append(rollout_info['Final_ENE'])
             rollouts.append(rollout_info)
 
         #save all eval rollouts
@@ -176,9 +183,11 @@ def run_eval(args, save_dir):
         print("SCORES: ", list_scores, " ... mean: ", np.mean(list_scores), " std: ", np.std(list_scores), "\n\n")
         print(np.array(list_rewards).shape)
         np.save(save_dir +"/eval_rewards_{}.npy".format(args.running_times),np.array(list_rewards))
-        if sim_ver == "inverted_pendulum":
+        if sim_ver == "inverted_pendulum"or sim_ver=="reacher":
             print("EEIS: ", list_eeis, " ... mean: ", np.mean(list_eeis), " std: ", np.std(list_eeis), "\n\n")
             np.save(save_dir + "/eval_eeis_{}.npy".format(args.running_times), np.array(list_eeis))
+            np.save(save_dir + "/eval_ers_{}.npy".format(args.running_times), np.array(list_ERss))
+            np.save(save_dir + "/eval_enes_{}.npy".format(args.running_times), np.array(list_ENEss))
 
 
 def main():
@@ -201,6 +210,7 @@ def main():
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--running_times', type=int, default=0)
     parser.add_argument('--control_delta', type=int, default=1)
+    parser.add_argument('--reward_type', type=str, default='st')
     args = parser.parse_args()
 
     #directory to load from

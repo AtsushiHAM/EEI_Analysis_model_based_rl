@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="atsushi@192.168.1.149:22 password" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="atsushi@192.168.1.149:22 password" remoteFilesAllowedToDisappearOnAutoupload="false" autoUploadExternalChanges="true">
     <serverData>
       <paths name="atsushi@192.168.1.149:22 password">
         <serverdata>
           <mappings>
             <mapping deploy="/home/atsushi/Documents" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="atsushi@192.168.1.149:22 password (1)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/atsushi/Documents" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="atsushi@192.168.1.149:22 password (2)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/atsushi/Documents" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="atsushi@192.168.1.149:22 password (3)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/atsushi/Documents" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="atsushi@192.168.1.149:22 password (4)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/atsushi/Documents" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="atsushi@192.168.1.149:22 password (5)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/atsushi/Documents" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="atsushi@192.168.1.149:22 password (6)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/atsushi/Documents/pddm-master" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="minh@192.168.2.101:22 password">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/minh/Documents/pddm_from_ubuntu20" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>

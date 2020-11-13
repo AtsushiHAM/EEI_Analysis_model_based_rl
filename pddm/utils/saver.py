@@ -142,7 +142,7 @@ class Saver:
                 save_data.rollouts_rewardsPerIter)
         np.save(self.save_dir + '/rollouts_scoresPerIter.npy',
                 save_data.rollouts_scoresPerIter)
-        if simulateion_ver=="inverted_pendulum":
+        if simulateion_ver=="inverted_pendulum" or "reacher":
             np.save(self.save_dir + '/rollouts_EEIPerIter.npy',
                 save_data.rollouts_EEIPerIter)
             np.save(self.save_dir + '/rollouts_ERPerIter.npy',
@@ -153,7 +153,7 @@ class Saver:
         #plot rewards and scores (for rollouts from all iterations thus far)
         rew = np.array(save_data.rollouts_rewardsPerIter)
         scores = np.array(save_data.rollouts_scoresPerIter)
-        if simulateion_ver == "inverted_pendulum":
+        if simulateion_ver == "inverted_pendulum" or "reacher":
             EEI = np.array(save_data.rollouts_EEIPerIter)
             ER = np.array(save_data.rollouts_ERPerIter)
             ENE = np.array(save_data.rollouts_ENEPerIter)
@@ -161,7 +161,7 @@ class Saver:
         plot_mean_std(scores[:, 0], scores[:, 1],
                       self.save_dir + '/scores_perIter')
 
-        if simulateion_ver=="inverted_pendulum":
+        if simulateion_ver=="inverted_pendulum" or "reacher":
             plot_mean_std(EEI[:, 0], EEI[:, 1],
                       self.save_dir + '/EEI_perIter')
             plot_mean_std(ER[:, 0], ER[:, 1],

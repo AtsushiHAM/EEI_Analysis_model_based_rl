@@ -28,8 +28,8 @@
 ## env
 'env_name': ['pddm_furuta_inverted_pendulum_force-v3'],
 'rollout_length': [500],
-'num_iters': [30],
-'num_trajectories_per_iter': [10],
+'num_iters': [3],
+'num_trajectories_per_iter': [1],
 
 ## continue
 'continue_run': [-1],
@@ -43,7 +43,7 @@
 ## noise
 'make_aggregated_dataset_noisy': [True],
 'make_training_dataset_noisy': [True],
-'rollouts_noise_actions': [False],
+'rollouts_noise_actions': [True],
 'rollouts_document_noised_actions': [False],
 
 ##########################

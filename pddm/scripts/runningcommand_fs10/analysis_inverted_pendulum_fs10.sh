@@ -29,6 +29,7 @@ control_delta=10
 ##########################
 for running_times in 10 11 12 13 14 15 16 17 18 19
 do
+  echo $running_times
   ### No torque sensor####
   python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
   python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu

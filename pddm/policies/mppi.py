@@ -212,7 +212,8 @@ class MPPI(object):
         ### useful for debugging/analysis...
         #########################################
         if self.execute_sideRollouts :
-            if (step_number % self.horizon) == 500 :
+            if (step_number % self.horizon) == 0 :
+            #if (step_number % 500) == 400:
 
                 state_prediction_inverted_pendulum(self.env,self.reward_func,resulting_states_list,all_samples,starting_fullenvstate,actions_taken_so_far,
                                        self._save_dir,self.plot_sideRollouts,best_sim_num,worst_sim_num,iter,rollout_num,step_number)

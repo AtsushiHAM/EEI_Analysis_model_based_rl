@@ -6,7 +6,7 @@ from gym.envs.mujoco import mujoco_env
 import os
 
 GYM_ASSET_PATH=xml_path = os.path.join(os.path.dirname(__file__), 'assets')
-class CartPendulumEnv(mujoco_env.MujocoEnv, utils.EzPickle):
+class CartPoleEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self,file_path=os.path.join(GYM_ASSET_PATH,'inverted_pendulum.xml'),max_step=1000):
         #hamada added
         self.time = 0

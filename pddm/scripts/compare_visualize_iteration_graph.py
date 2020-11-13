@@ -29,6 +29,9 @@ import pddm.envs
 from gym import wrappers
 import matplotlib.pyplot as plt
 import time
+import re
+from pylab import rcParams
+rcParams['figure.figsize'] = 30,30
 
 def vis_iter_graph(args, load_dir0,load_dir1,load_dir2):
 
@@ -102,7 +105,12 @@ def vis_iter_graph(args, load_dir0,load_dir1,load_dir2):
     save_dir =args.save_dir+"//{}_rowdata/".format(time.strftime("%Y-%m-%d"))
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
+    if re.findall('i.?v', env_name1 ):
+        agent_type="ip"
+    elif re.findall('r.?a',env_name1):
+        agent_type = "re"
     iter_num ="iter"+str(args.iter_num)
+    print("env name {}".format(re.findall('r.?a',env_name1)))
     for vis_index in range(len(rollouts_info0)):
 
         print("\n\nROLLOUT NUMBER ", vis_index, " .... num steps loaded: ", rollouts_info0[vis_index]['actions'].shape[0])
@@ -110,41 +118,61 @@ def vis_iter_graph(args, load_dir0,load_dir1,load_dir2):
         #visualize rollouts from this iteration
         states0=rollouts_info0[vis_index]["observations"]
         actions0=rollouts_info0[vis_index]["actions"]
-        perturb0 = rollouts_info0[vis_index]["disturbances"].reshape([500,1])
+        if args.perturb:
+            perturb0 = rollouts_info0[vis_index]["disturbances"].reshape([500,1])
         # visualize rollouts from this iteration
         states1 = rollouts_info1[vis_index]["observations"]
         actions1 = rollouts_info1[vis_index]["actions"]
-        perturb1 = rollouts_info1[vis_index]["disturbances"].reshape([500, 1])
+        if args.perturb:
+            perturb1 = rollouts_info1[vis_index]["disturbances"].reshape([500, 1])
         # visualize rollouts from this iteration
         states2 = rollouts_info2[vis_index]["observations"]
         actions2 = rollouts_info2[vis_index]["actions"]
-        perturb2 = rollouts_info2[vis_index]["disturbances"].reshape([500, 1])
-        subfigs = actions0.shape[1] +states1.shape[1] +perturb0.shape[1]
+        if args.perturb:
+            perturb2 = rollouts_info2[vis_index]["disturbances"].reshape([500, 1])
+        if args.perturb:
+            subfigs = actions0.shape[1] +states1.shape[1] +perturb0.shape[1]
+        else:
+            subfigs = actions0.shape[1] + states1.shape[1]
+
+        if agent_type=="ip":
+            state_index = [0,1,2,3]
+        elif agent_type=="re":
+            #state_index = [0, 1, 2, 3,4,5,6,7,8,9]
+            state_index =[4,5,6,7,8,9 ]
+
         fig = plt.figure()
-        until_where = 200
-        for k in range(perturb0.shape[1]):
-            plt.subplot(subfigs,1,k+1)
-            plt.plot(perturb0[:until_where],'b')
-            plt.plot(perturb1[:until_where], 'r')
-            plt.plot(perturb2[:until_where], 'g')
-            plt.ylabel("perturb{}".format(k))
+        until_where = 500
+        if args.perturb:
+            for k in range(perturb0.shape[1]):
+                plt.subplot(subfigs, 1, k + 1)
+                plt.plot(perturb0[:until_where], 'b')
+                plt.plot(perturb1[:until_where], 'r')
+                plt.plot(perturb2[:until_where], 'g')
+                plt.ylabel("perturb{}".format(k))
         for i in range(actions0.shape[1]):
-            plt.subplot(subfigs,1,perturb0.shape[1]+i+1)
+            if args.perturb:
+                plt.subplot(subfigs,1,perturb0.shape[1]+i+1)
+            else:
+                plt.subplot(subfigs,1,i+1)
             plt.plot(actions0[:until_where,i],'b')
             plt.plot(actions1[:until_where, i], 'r')
             plt.plot(actions2[:until_where, i], 'g')
             plt.ylabel("action{}".format(i))
-        for j in range(states1.shape[1]):
-            plt.subplot(subfigs, 1, j+actions0.shape[1]+1+perturb0.shape[1])
-            plt.plot(states0[:until_where, j],'b')
-            plt.plot(states1[:until_where, j], 'r')
-            plt.plot(states2[:until_where, j], 'g')
-            plt.ylabel("state{}".format(j))
+        for j,ind in enumerate(state_index) :
+            if args.perturb:
+                plt.subplot(subfigs, 1, j+actions0.shape[1]+1+perturb0.shape[1])
+            else:
+                plt.subplot(subfigs, 1, j+actions0.shape[1]+1)
+            plt.plot(states0[:until_where, ind],'b')
+            plt.plot(states1[:until_where, ind], 'r')
+            plt.plot(states2[:until_where, ind], 'g')
+            plt.ylabel("state{}".format(ind))
         if args.eval:
-            plt.savefig(save_dir + "/eval_{}_iter{}_rollout{}".format(args.save_name, str(args.iter_num), str(vis_index)),
+            plt.savefig(save_dir + "/eval_{}_iter{}_rollout{}_{}".format(args.save_name, str(args.iter_num), str(vis_index),args.data_type),
                         bbox_inches='tight')
         else:
-            plt.savefig(save_dir + "/{}_iter{}_rollout{}".format(args.save_name,str(args.iter_num),str(vis_index)), bbox_inches='tight')
+            plt.savefig(save_dir + "/{}_iter{}_rollout{}_{}".format(args.save_name,str(args.iter_num),str(vis_index),args.data_type), bbox_inches='tight')
 
 
 
@@ -166,6 +194,8 @@ def main():
     parser.add_argument('--save_dir', type=str)
     parser.add_argument('--perturb', action="store_true")
     parser.add_argument('--save_name', type=str)
+    parser.add_argument('--data_type', type=str)
+    #parser.add_argument('--agent_type', type=str)
     args = parser.parse_args()
 
     ##########################

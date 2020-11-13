@@ -163,7 +163,7 @@ class RandomShooting(object):
         #########################################
 
         if self.execute_sideRollouts:
-            if (step_number % self.horizon) == 500 :
+            if (step_number % self.horizon) == 0 :
 
                 state_prediction_inverted_pendulum(self.env,self.reward_func, resulting_states_list, all_samples, starting_fullenvstate,
                                                    actions_taken_so_far,

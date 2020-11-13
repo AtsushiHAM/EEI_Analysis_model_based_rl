@@ -53,13 +53,13 @@ def main():
             print("LOOKING AT REW")
             data=[]
             for j in range(10):
-                data.append(np.load(jobs[i] + "/eval_rewards_{}.npy".format(j)))
+                data.append(np.load(jobs[i] + "/eval_rewards_{}.npy".format(j))[0])
             data=np.array(data).flatten()
             all_data.append(data)
         else:
             data = []
             for j in range(10):
-                data.append(np.load(jobs[i] + "/eval_eeis_{}.npy".format(j)))
+                data.append(np.load(jobs[i] + "/eval_eeis_{}.npy".format(j))[0])
             data = np.array(data).flatten()
             all_data.append(data)
     data_dic={"data{}".format(i):all_data[i] for i in range(len(all_data))}

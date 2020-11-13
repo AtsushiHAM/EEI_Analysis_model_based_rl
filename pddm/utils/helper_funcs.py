@@ -251,17 +251,39 @@ def do_groundtruth_rollout(acs, env, starting_fullenvstate,
         #reset env to starting state
     o = curr_env.reset(reset_state=starting_fullenvstate)
 
+    #hamada adeded
+    job = re.findall('I.?P', str(type(
+        env.env.env)))
+    i=0
 
 
     #get the env to do what it's done so far
     for ac in actions_taken_so_far:
+    #hamada changed
+    #for i, ac in enumerate(actions_taken_so_far):
         if (ac.shape[0] == 1):
             ac = ac[0]
+        if not job:
+            pass
+        elif job[0] == 'IP':
+            if i == 0:
+                curr_env.env.env.perturb_joint(30)
+            else:
+                curr_env.env.env.perturb_joint(0)
+
         o, _, _, _ = curr_env.step(ac)
         #print("lengh action_taken_so_far{}".format(len(actions_taken_so_far)))
+        i+=1
 
     true_states.append(o)
     for ac in acs:
+        if not job:
+            pass
+        elif job[0] == 'IP':
+            if i == 0:
+                curr_env.env.env.perturb_joint(30)
+            else:
+                curr_env.env.env.perturb_joint(0)
         o, _, _, _ = curr_env.step(ac)
         true_states.append(o)
 
@@ -334,7 +356,9 @@ def visualize_rendering(rollout_info,
     scores, rewards = [], []
     for action in rollout_info['actions']:
 
-        if job[0]=='IP':
+        if not job:
+            pass
+        elif job[0]=='IP':
             if perturb:
                 if count==0:
                     print("previous state {} ".format(env.env.env.state_vector()))
@@ -414,7 +438,9 @@ def visualize_rendering(rollout_info,
         lasttime = time.time()
         count += 1
 
-        if  job[0]=='IP':
+        if not job:
+            pass
+        elif job[0]=='IP':
             if perturb:
                 env.env.env.remove_all_perturbation()
 

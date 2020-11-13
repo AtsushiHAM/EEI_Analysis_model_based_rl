@@ -87,7 +87,7 @@
 
 ## MPC
 'horizon': [20],
-'num_control_samples': [2000],
+'num_control_samples': [1000],
 'controller_type': ['mppi'],
 
 ## cem

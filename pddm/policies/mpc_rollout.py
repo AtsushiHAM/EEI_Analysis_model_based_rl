@@ -23,8 +23,10 @@ from pddm.policies.mppi import MPPI
 
 ###added by hamada
 from pddm.utils.utils import get_actual_EEI
+from pddm.utils.utils import get_actual_EEI_reacher
 from pddm.utils.utils import get_actual_EEI_kai
 from pddm.classic_pollicy.pid_policy import PID_Policy
+from pddm.classic_pollicy.reacher_pid import  Reacher_PID
 import os
 
 
@@ -50,6 +52,7 @@ class MPCRollout:
         self.print_minimal = params.print_minimal
         self.use_ground_truth_dynamics = params.use_ground_truth_dynamics
         self.evaluating = evaluating
+
         self.rollout_length = params.rollout_length
         self.K = params.K
         self.rand_policy = rand_policy
@@ -57,9 +60,9 @@ class MPCRollout:
         self.document_noised_actions = params.rollouts_document_noised_actions
         self.dt_from_xml = params.dt_from_xml
         self.noise_amount = 0.005
-
+        print("eval {} and noise{}".format(self.evaluating,self.noise_actions))
         #hamada modified
-        if reward_type=="st_ac":
+        if reward_type=="st":
             self.reward_func = env.unwrapped_env.get_reward
         else:
             self.reward_func = env.unwrapped_env.get_reward1
@@ -82,14 +85,22 @@ class MPCRollout:
             self.env, self.dyn_models, self.reward_func, rand_policy,
             self.use_ground_truth_dynamics,
             execute_sideRollouts, plot_sideRollouts, params, save_dir, iter)
+
+
+        self.controller_reacer_pid = Reacher_PID(
+            self.env, self.dyn_models, self.reward_func, rand_policy,
+            self.use_ground_truth_dynamics,
+            execute_sideRollouts, plot_sideRollouts, params, save_dir, iter)
+
         self._perturb = True
         if plot_sideRollouts:
             #self._purturb_data = np.load(os.getcwd() + "/eval_perterb.npy").reshape([100, 30])
-            self._purturb_data = np.full([100,30],30)
+            if sim_ver == "inverted_pendulum":
+                self._purturb_data = np.full([100,30],30)
 
         else:
-
-            self._purturb_data = np.load(os.getcwd() + "/perterb.npy").reshape([100, 30])
+            if sim_ver == "inverted_pendulum":
+                self._purturb_data = np.load(os.getcwd() + "/perterb.npy").reshape([100, 30])
         self._sim_ver = sim_ver
         self._control_delta = control_delta
         print('hello')
@@ -127,6 +138,7 @@ class MPCRollout:
         if self.evaluating:
             self.noise_actions = False
 
+
         #######################################
         #### select controller type
         #######################################
@@ -141,6 +153,9 @@ class MPCRollout:
         ###added by hamada
         elif controller_type=='pid':
             get_action = self.controller_pid.get_action
+
+        elif controller_type == 'reacher_pid':
+            get_action = self.controller_reacer_pid.get_action
 
 
         #######################################
@@ -220,7 +235,7 @@ class MPCRollout:
             env_infos.append(env_info)
             total_reward_for_episode += rew
 
-            print("how many zs {}".format(z))
+            #print("how many zs {}".format(z))
 
             # Note: rewards/actions/etc. are populated during these first K steps
             # but traj_taken_K/traj_taken are not
@@ -380,6 +395,19 @@ class MPCRollout:
                 Errors.append(error)
                 Energyies.append(energy)
 
+            if self._sim_ver == "reacher":
+
+                ##EEI, contorl_accuracy, Energy = get_EEI(curr_state.reshape([1,curr_state.shape[0]]), action_to_document.reshape([1,action_to_document.shape[0]]), Final_EEI=False,test_rollout=False)
+                EEI, error, energy = get_actual_EEI_reacher(curr_state,
+                                                        action_to_document,
+                                                        error,
+                                                        energy,
+                                                        Final_EEI=False, test_rollout=False)
+                #EEI2, error2, energy2 = get_actual_EEI_kai(traj_taken,actions_taken_K)
+                EEIs.append(EEI)
+                Errors.append(error)
+                Energyies.append(energy)
+
 
 
             if not self.print_minimal:
@@ -391,6 +419,10 @@ class MPCRollout:
                         #print("error1 ", error, ", error2: ",
                         #      error2,
                         #     ", energy1: ",energy, ", energy2: ", energy2)
+                    if self._sim_ver == "reacher":
+                        print("done step ", step, ", rew: ",
+                          total_reward_for_episode,
+                          ", EEI: ",EEI)
 
             #update
             step += 1
@@ -412,10 +444,10 @@ class MPCRollout:
         if not self.print_minimal:
             print("DONE TAKING ", step, " STEPS.")
             print("Total reward: ", total_reward_for_episode)
-            if self._sim_ver == "inverted_pendulum":
+            if self._sim_ver == "inverted_pendulum" or self._sim_ver == "reacher":
                 print("EEI: ", EEI)
 
-        if self._sim_ver == "inverted_pendulum":
+        if self._sim_ver == "inverted_pendulum" or self._sim_ver == "reacher" :
             rollout_info = dict(
                 starting_state=starting_fullenvstate,
                 observations=np.array(traj_taken),

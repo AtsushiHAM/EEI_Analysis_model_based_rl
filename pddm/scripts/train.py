@@ -14,7 +14,7 @@
 
 import os
 os.environ["MKL_THREADING_LAYER"] = "GNU"
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 import numpy as np
 import numpy.random as npr
 import tensorflow as tf
@@ -90,6 +90,7 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
 
         loader = Loader(save_dir)
         env, dt_from_xml = create_env(env_name)
+        #env.env.env.render()
         args.dt_from_xml = dt_from_xml
         random_policy = Policy_Random(env.env)
 
@@ -153,7 +154,7 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
             scores_perIter = []
             trainingData_perIter = []
 
-            if simulation_version=="inverted_pendulum":
+            if simulation_version=="inverted_pendulum" or simulation_version=="reacher":
                 EEIss_perIter=[]
                 ERss_perIter = []
                 ENEss_perIter = []
@@ -185,7 +186,7 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
             rew_perIter = iter_data.rollouts_rewardsPerIter
             scores_perIter = iter_data.rollouts_scoresPerIter
             trainingData_perIter = iter_data.training_numData
-            if simulation_version=="inverted_pendulum":
+            if simulation_version=="inverted_pendulum" or simulation_version=="reacher":
                 EEIss_perIter=iter_data.rollouts_EEIPerIter
                 ERss_perIter = iter_data.rollouts_ERPerIter
                 ENEss_perIter = iter_data.rollouts_ENEPerIter
@@ -392,7 +393,7 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
                     list_scores.append(rollout_info['rollout_meanFinalScore'])
                     list_mpes.append(np.mean(rollout_info['mpe_1step']))
                     rollouts_info.append(rollout_info)
-                    if simulation_version == "inverted_pendulum":
+                    if simulation_version == "inverted_pendulum" or simulation_version == "reacher" :
                         list_EEIss.append(rollout_info['Final_EEI'])
                         list_ERss.append(rollout_info['Final_ER'])
                         list_ENEss.append(rollout_info['Final_ENE'])
@@ -480,7 +481,7 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
             scores_perIter.append([np.mean(list_scores), np.std(list_scores)])
 
             ##aded hamada
-            if simulation_version=="inverted_pendulum":
+            if simulation_version=="inverted_pendulum" or simulation_version=="reacher":
                 print("EEI {}".format(np.array(list_EEIss)))
                 print("EEI shape {}".format(np.array(list_EEIss).shape))
                 EEIss_perIter.append([np.mean(list_EEIss),np.std(list_EEIss)])
@@ -491,7 +492,7 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
             saver_data.rollouts_rewardsPerIter = rew_perIter
             saver_data.rollouts_scoresPerIter = scores_perIter
             saver_data.rollouts_info = rollouts_info
-            if simulation_version == "inverted_pendulum":
+            if simulation_version == "inverted_pendulum" or simulation_version == "reacher":
                 saver_data.rollouts_EEIPerIter = EEIss_perIter
                 saver_data.rollouts_ERPerIter = ERss_perIter
                 saver_data.rollouts_ENEPerIter = ENEss_perIter
@@ -540,7 +541,7 @@ def main():
     parser.add_argument('--use_gpu', action="store_true")
     parser.add_argument('-frac', '--gpu_frac', type=float, default=0.9)
     parser.add_argument('--control_delta', type=int, default=1)
-    parser.add_argument('--reward_type', type=str, default='st_ac')
+    parser.add_argument('--reward_type', type=str, default='st')
     general_args = parser.parse_args()
 
     #####################

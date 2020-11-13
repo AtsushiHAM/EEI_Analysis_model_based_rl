@@ -64,7 +64,7 @@ def vis_iter_graph(args, load_dir):
     rewards = []
     scores = []
     save_name=args.save_name
-    save_dir =args.save_dir+"/{}_rowdata/".format(time.strftime("%Y-%m-%d"))
+    save_dir =args.save_dir+"/{}_eachrowdata/".format(time.strftime("%Y-%m-%d"))
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
     iter_num ="iter"+str(args.iter_num)
