@@ -67,11 +67,10 @@ class InvertedPendulumEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
 
         # calc rew
-        self.reward_dict['actions'] =- 2.5 * np.sum(np.square(actions), axis=1)
-            #np.where(pendulum_angle<0.05, - 2.5 * np.sum(np.square(actions), axis=1),0)#0.1 * np.sum(np.square(actions), axis=1)
-        self.reward_dict['pendulum_angle'] = np.abs(pendulum_angle)
-        self.reward_dict['stable'] = 10-50*self.reward_dict['pendulum_angle']
-        self.reward_dict['r_total'] = self.reward_dict['stable']+self.reward_dict['actions']#
+        self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
+        self.reward_dict['stable'] = np.abs(pendulum_angle)
+        self.reward_dict['r_allive'] = np.array(10)  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * (self.reward_dict['stable'] + 0.01 * self.reward_dict['actions'])
         #print("mod_rew")
 
         # check if done
@@ -226,11 +225,10 @@ class InvertedPendulumEnv1(mujoco_env.MujocoEnv, utils.EzPickle):
             #print("hello {}".format(actions.shape))
 
         # calc rew
-        self.reward_dict['actions'] = np.where(pendulum_angle < 0.05, -0.01 * np.sum(np.square(actions), axis=1),
-                                               0)  # 0.1 * np.sum(np.square(actions), axis=1)
-        self.reward_dict['pendulum_angle'] = np.abs(pendulum_angle)
-        self.reward_dict['stable'] = 10 - 50 * self.reward_dict['pendulum_angle']
-        self.reward_dict['r_total'] = self.reward_dict['stable'] + self.reward_dict['actions']  #
+        self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
+        self.reward_dict['stable'] = np.abs(pendulum_angle)
+        self.reward_dict['r_allive'] = np.array(10)  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * (self.reward_dict['stable'] + 0.01 * self.reward_dict['actions'])
 
         # check if done
         dones = np.zeros((observations.shape[0],))
@@ -378,14 +376,13 @@ class InvertedPendulumEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
         if str(type(actions.shape)) == "<class 'tuple'>":
             actions = actions.reshape(-1, 1)
             # print((type(actions.shape)))
-            print("hello {}".format(actions.shape))
+            #print("hello {}".format(actions.shape))
 
         # calc rew
-        self.reward_dict['actions'] = np.where(pendulum_angle < 0.05, -0.01 * np.sum(np.square(actions), axis=1),
-                                               0)  # 0.1 * np.sum(np.square(actions), axis=1)
-        self.reward_dict['pendulum_angle'] = np.abs(pendulum_angle)
-        self.reward_dict['stable'] = 10 - 50 * self.reward_dict['pendulum_angle']
-        self.reward_dict['r_total'] = self.reward_dict['stable'] + self.reward_dict['actions']  #
+        self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
+        self.reward_dict['stable'] = np.abs(pendulum_angle)
+        self.reward_dict['r_allive'] = np.array(10)  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * (self.reward_dict['stable'] + 0.01 * self.reward_dict['actions'])
 
         # check if done
         dones = np.zeros((observations.shape[0],))
@@ -537,11 +534,10 @@ class InvertedPendulumEnv3(mujoco_env.MujocoEnv, utils.EzPickle):
             #print("hello {}".format(actions.shape))
 
         # calc rew
-        self.reward_dict['actions'] = np.where(pendulum_angle < 0.05, -0.01 * np.sum(np.square(actions), axis=1),
-                                               0)  # 0.1 * np.sum(np.square(actions), axis=1)
-        self.reward_dict['pendulum_angle'] = np.abs(pendulum_angle)
-        self.reward_dict['stable'] = 10 - 50 * self.reward_dict['pendulum_angle']
-        self.reward_dict['r_total'] = self.reward_dict['stable'] + self.reward_dict['actions']  #
+        self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
+        self.reward_dict['stable'] = np.abs(pendulum_angle)
+        self.reward_dict['r_allive'] = np.array(10)  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * (self.reward_dict['stable'] + 0.01 * self.reward_dict['actions'])
         # check if done
         dones = np.zeros((observations.shape[0],))
         dones[np.abs(pendulum_angle) > 360] = 1
