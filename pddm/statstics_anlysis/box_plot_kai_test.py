@@ -56,10 +56,22 @@ def main():
                 data.append(np.load(jobs[i] + "/eval_rewards_{}.npy".format(j))[0])
             data=np.array(data).flatten()
             all_data.append(data)
-        else:
+        elif args.data_type=="eei":
             data = []
             for j in range(10):
                 data.append(np.load(jobs[i] + "/eval_eeis_{}.npy".format(j))[0])
+            data = np.array(data).flatten()
+            all_data.append(data)
+        elif args.data_type=="ene":
+            data = []
+            for j in range(10):
+                data.append(np.load(jobs[i] + "/eval_enes_{}.npy".format(j))[0])
+            data = np.array(data).flatten()
+            all_data.append(data)
+        elif args.data_type == "er":
+            data = []
+            for j in range(10):
+                data.append(np.load(jobs[i] + "/eval_ers_{}.npy".format(j))[0])
             data = np.array(data).flatten()
             all_data.append(data)
     data_dic={"data{}".format(i):all_data[i] for i in range(len(all_data))}
@@ -98,6 +110,10 @@ def main():
         ax.set_ylabel('EEI')
     elif args.data_type == "rewards":
         ax.set_ylabel('Rewards')
+    elif args.data_type == "ene":
+        ax.set_ylabel('Energy')
+    elif args.data_type == "er":
+        ax.set_ylabel('Error')
 
     if len(all_data)==5:
         order = ['data0', 'data1', 'data2','data3','data4']

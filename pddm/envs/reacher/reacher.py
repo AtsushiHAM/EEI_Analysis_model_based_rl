@@ -47,11 +47,10 @@ class ReacherEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         difference_posy = observations[:, 9]
 
         # calc rew
-        # self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        # self.reward_dict['stable'] = np.cos(pendulum_angle)
-        #self.reward_dict['goal_difference'] = 10 - 50 * np.linalg.norm(tip_pos-self.obs_dict['goal_pos'])
-        self.reward_dict['goal_difference'] = np.array(10 - 50 * (np.abs(difference_posx)+np.abs(difference_posy)))
-        self.reward_dict['r_total'] = self.reward_dict['goal_difference']  # self.reward_dict['actions'] + self.reward_dict['stable']
+        self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
+        self.reward_dict['goal_difference'] = np.sqrt((difference_posx)**2+(difference_posy)**2)
+        self.reward_dict['r_allive'] = np.array(10)#np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['r_total'] =self.reward_dict['r_allive']- 50* self.reward_dict['goal_difference'] - 50*self.reward_dict['actions']
 
         # check if done
         dones = np.zeros((observations.shape[0],))
@@ -167,13 +166,10 @@ class ReacherEnv1_2(mujoco_env.MujocoEnv, utils.EzPickle):
         # get vars
         difference_posx= observations[:, 8]
         difference_posy = observations[:, 9]
-
-        # calc rew
-        # self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        # self.reward_dict['stable'] = np.cos(pendulum_angle)
-        #self.reward_dict['goal_difference'] = 10 - 50 * np.linalg.norm(tip_pos-self.obs_dict['goal_pos'])
-        self.reward_dict['goal_difference'] = np.array(10 - 50 * (np.abs(difference_posx)+np.abs(difference_posy)))
-        self.reward_dict['r_total'] = self.reward_dict['goal_difference']  # self.reward_dict['actions'] + self.reward_dict['stable']
+        self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
+        self.reward_dict['goal_difference'] = np.sqrt((difference_posx) ** 2 + (difference_posy) ** 2)
+        self.reward_dict['r_allive'] = np.array(10)  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * self.reward_dict['goal_difference'] - 50 *  self.reward_dict['actions']
 
         # check if done
         dones = np.zeros((observations.shape[0],))
@@ -293,11 +289,10 @@ class ReacherEnv1_5(mujoco_env.MujocoEnv, utils.EzPickle):
         difference_posy = observations[:, 9]
 
         # calc rew
-        # self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        # self.reward_dict['stable'] = np.cos(pendulum_angle)
-        #self.reward_dict['goal_difference'] = 10 - 50 * np.linalg.norm(tip_pos-self.obs_dict['goal_pos'])
-        self.reward_dict['goal_difference'] = np.array(10 - 50 * (np.abs(difference_posx)+np.abs(difference_posy)))
-        self.reward_dict['r_total'] = self.reward_dict['goal_difference']  # self.reward_dict['actions'] + self.reward_dict['stable']
+        self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
+        self.reward_dict['goal_difference'] = np.sqrt((difference_posx) ** 2 + (difference_posy) ** 2)
+        self.reward_dict['r_allive'] = np.array(10)  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * self.reward_dict['goal_difference'] - 50 *  self.reward_dict['actions']
 
         # check if done
         dones = np.zeros((observations.shape[0],))
@@ -419,9 +414,10 @@ class ReacherEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
         # calc rew
         # self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
         # self.reward_dict['stable'] = np.cos(pendulum_angle)
-        #self.reward_dict['goal_difference'] = 10 - 50 * np.linalg.norm(tip_pos-self.obs_dict['goal_pos'])
-        self.reward_dict['goal_difference'] = np.array(10 - 50 * (np.abs(difference_posx)+np.abs(difference_posy)))
-        self.reward_dict['r_total'] = self.reward_dict['goal_difference']  # self.reward_dict['actions'] + self.reward_dict['stable']
+        self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
+        self.reward_dict['goal_difference'] = np.sqrt((difference_posx) ** 2 + (difference_posy) ** 2)
+        self.reward_dict['r_allive'] = np.array(10)  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * self.reward_dict['goal_difference'] - 50 * self.reward_dict['actions']
 
         # check if done
         dones = np.zeros((observations.shape[0],))
@@ -546,8 +542,10 @@ class ReacherEnv6(mujoco_env.MujocoEnv, utils.EzPickle):
         # self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
         # self.reward_dict['stable'] = np.cos(pendulum_angle)
         #self.reward_dict['goal_difference'] = 10 - 50 * np.linalg.norm(tip_pos-self.obs_dict['goal_pos'])
-        self.reward_dict['goal_difference'] = np.array(10 - 50 * (np.abs(difference_posx)+np.abs(difference_posy)))
-        self.reward_dict['r_total'] = self.reward_dict['goal_difference']  # self.reward_dict['actions'] + self.reward_dict['stable']
+        self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
+        self.reward_dict['goal_difference'] = np.sqrt((difference_posx) ** 2 + (difference_posy) ** 2)
+        self.reward_dict['r_allive'] = np.array(10)  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * self.reward_dict['goal_difference'] - 50 * self.reward_dict['actions']
 
         # check if done
         dones = np.zeros((observations.shape[0],))

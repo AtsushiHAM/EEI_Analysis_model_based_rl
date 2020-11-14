@@ -30,6 +30,7 @@ class InvertedPendulumEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         utils.EzPickle.__init__(self)
         self.skip = self.frame_skip####different from before
 
+
     def get_reward(self, observations, actions):
 
         """get rewards of a given (observations, actions) pair
@@ -54,21 +55,23 @@ class InvertedPendulumEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
         # get vars
         pendulum_angle = observations[:, 1]
+        arm_angle = observations[:, 0]
 
 
         ##added hamada for mpe of inverted pendulum
         if str(type(actions.shape))=="<class 'tuple'>":
-            actions=np.array([actions])
+            actions=actions.reshape(-1,1)
             #print((type(actions.shape)))
-            #print(actions)
+            #print("hello {}".format(actions.shape))
 
 
 
         # calc rew
-        self.reward_dict['actions'] =  -0.1 * np.sum(np.square(actions), axis=1)#0.1 * np.sum(np.square(actions), axis=1)
-        #self.reward_dict['stable'] = np.cos(pendulum_angle)
-        self.reward_dict['stable'] = 10-50*np.abs(pendulum_angle)
-        self.reward_dict['r_total'] = self.reward_dict['stable']#+self.reward_dict['actions']#
+        self.reward_dict['actions'] =- 2.5 * np.sum(np.square(actions), axis=1)
+            #np.where(pendulum_angle<0.05, - 2.5 * np.sum(np.square(actions), axis=1),0)#0.1 * np.sum(np.square(actions), axis=1)
+        self.reward_dict['pendulum_angle'] = np.abs(pendulum_angle)
+        self.reward_dict['stable'] = 10-50*self.reward_dict['pendulum_angle']
+        self.reward_dict['r_total'] = self.reward_dict['stable']+self.reward_dict['actions']#
         #print("mod_rew")
 
         # check if done
@@ -80,45 +83,6 @@ class InvertedPendulumEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             return self.reward_dict['r_total'][0], dones[0]
         return self.reward_dict['r_total'], dones
 
-    def get_reward1(self, observations, actions):
-
-        """get rewards of a given (observations, actions) pair
-
-        Args:
-            observations: (batchsize, obs_dim) or (obs_dim,)
-            actions: (batchsize, ac_dim) or (ac_dim,)
-
-        Return:
-            r_total: (batchsize,1) or (1,), reward for that pair
-            done: (batchsize,1) or (1,), True if reaches terminal state
-        """
-
-        # initialize and reshape as needed, for batch mode
-        self.reward_dict = {}
-        if len(observations.shape) == 1:
-            observations = np.expand_dims(observations, axis=0)
-            actions = np.expand_dims(actions, axis=0)
-            batch_mode = False
-        else:
-            batch_mode = True
-
-        # get vars
-        pendulum_angle = observations[:, 1]
-
-        # calc rew
-        self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        #self.reward_dict['stable'] = np.cos(pendulum_angle)
-        self.reward_dict['stable'] = 10-50*np.abs(pendulum_angle)
-        self.reward_dict['r_total'] = self.reward_dict['stable']+self.reward_dict['actions'] #self.reward_dict['actions'] + self.reward_dict['stable']
-
-        # check if done
-        dones = np.zeros((observations.shape[0],))
-        dones[np.abs(pendulum_angle) > 360] = 1
-
-        # return
-        if not batch_mode:
-            return self.reward_dict['r_total'][0], dones[0]
-        return self.reward_dict['r_total'], dones
 
     def get_score(self, obs):
         pendulum_angle_after = obs[1]
@@ -257,13 +221,16 @@ class InvertedPendulumEnv1(mujoco_env.MujocoEnv, utils.EzPickle):
 
         ##added hamada for mpe of inverted pendulum
         if str(type(actions.shape)) == "<class 'tuple'>":
-            actions = np.array([actions])
+            actions = actions.reshape(-1, 1)
+            # print((type(actions.shape)))
+            #print("hello {}".format(actions.shape))
 
         # calc rew
-        self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        # self.reward_dict['stable'] = np.cos(pendulum_angle)
-        self.reward_dict['stable'] = 10 - 50 * np.abs(pendulum_angle)
-        self.reward_dict['r_total'] = self.reward_dict['stable']  # self.reward_dict['actions'] + self.reward_dict['stable']
+        self.reward_dict['actions'] = np.where(pendulum_angle < 0.05, -0.01 * np.sum(np.square(actions), axis=1),
+                                               0)  # 0.1 * np.sum(np.square(actions), axis=1)
+        self.reward_dict['pendulum_angle'] = np.abs(pendulum_angle)
+        self.reward_dict['stable'] = 10 - 50 * self.reward_dict['pendulum_angle']
+        self.reward_dict['r_total'] = self.reward_dict['stable'] + self.reward_dict['actions']  #
 
         # check if done
         dones = np.zeros((observations.shape[0],))
@@ -274,45 +241,6 @@ class InvertedPendulumEnv1(mujoco_env.MujocoEnv, utils.EzPickle):
             return self.reward_dict['r_total'][0], dones[0]
         return self.reward_dict['r_total'], dones
 
-    def get_reward1(self, observations, actions):
-
-        """get rewards of a given (observations, actions) pair
-
-        Args:
-            observations: (batchsize, obs_dim) or (obs_dim,)
-            actions: (batchsize, ac_dim) or (ac_dim,)
-
-        Return:
-            r_total: (batchsize,1) or (1,), reward for that pair
-            done: (batchsize,1) or (1,), True if reaches terminal state
-        """
-
-        # initialize and reshape as needed, for batch mode
-        self.reward_dict = {}
-        if len(observations.shape) == 1:
-            observations = np.expand_dims(observations, axis=0)
-            actions = np.expand_dims(actions, axis=0)
-            batch_mode = False
-        else:
-            batch_mode = True
-
-        # get vars
-        pendulum_angle = observations[:, 1]
-
-        # calc rew
-        self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        #self.reward_dict['stable'] = np.cos(pendulum_angle)
-        self.reward_dict['stable'] = 10-50*np.abs(pendulum_angle)
-        self.reward_dict['r_total'] = self.reward_dict['stable']+self.reward_dict['actions'] #self.reward_dict['actions'] + self.reward_dict['stable']
-
-        # check if done
-        dones = np.zeros((observations.shape[0],))
-        dones[np.abs(pendulum_angle) > 360] = 1
-
-        # return
-        if not batch_mode:
-            return self.reward_dict['r_total'][0], dones[0]
-        return self.reward_dict['r_total'], dones
 
     def get_score(self, obs):
         pendulum_angle_after = obs[1]
@@ -446,59 +374,18 @@ class InvertedPendulumEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
         # get vars
         pendulum_angle = observations[:, 1]
         ##added hamada for mpe of inverted pendulum
-        if str(type(actions.shape)) == "<class 'tuple'>":
-            actions = np.array([actions])
-
-        # calc rew
-        self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        # self.reward_dict['stable'] = np.cos(pendulum_angle)
-        self.reward_dict['stable'] = 10 - 50 * np.abs(pendulum_angle)
-        self.reward_dict['r_total'] = self.reward_dict['stable']
-        #print("mod_rew")
-
-        # check if done
-        dones = np.zeros((observations.shape[0],))
-        dones[np.abs(pendulum_angle) > 360] = 1
-
-        # return
-        if not batch_mode:
-            return self.reward_dict['r_total'][0], dones[0]
-        return self.reward_dict['r_total'], dones
-
-    def get_reward1(self, observations, actions):
-
-        """get rewards of a given (observations, actions) pair
-
-        Args:
-            observations: (batchsize, obs_dim) or (obs_dim,)
-            actions: (batchsize, ac_dim) or (ac_dim,)
-
-        Return:
-            r_total: (batchsize,1) or (1,), reward for that pair
-            done: (batchsize,1) or (1,), True if reaches terminal state
-        """
-
-        # initialize and reshape as needed, for batch mode
-        self.reward_dict = {}
-        if len(observations.shape) == 1:
-            observations = np.expand_dims(observations, axis=0)
-            actions = np.expand_dims(actions, axis=0)
-            batch_mode = False
-        else:
-            batch_mode = True
-
-        # get vars
-        pendulum_angle = observations[:, 1]
-
         ##added hamada for mpe of inverted pendulum
         if str(type(actions.shape)) == "<class 'tuple'>":
-            actions = np.array([actions])
+            actions = actions.reshape(-1, 1)
+            # print((type(actions.shape)))
+            print("hello {}".format(actions.shape))
 
         # calc rew
-        self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        #self.reward_dict['stable'] = np.cos(pendulum_angle)
-        self.reward_dict['stable'] = 10-50*np.abs(pendulum_angle)
-        self.reward_dict['r_total'] = self.reward_dict['stable']+self.reward_dict['actions'] #self.reward_dict['actions'] + self.reward_dict['stable']
+        self.reward_dict['actions'] = np.where(pendulum_angle < 0.05, -0.01 * np.sum(np.square(actions), axis=1),
+                                               0)  # 0.1 * np.sum(np.square(actions), axis=1)
+        self.reward_dict['pendulum_angle'] = np.abs(pendulum_angle)
+        self.reward_dict['stable'] = 10 - 50 * self.reward_dict['pendulum_angle']
+        self.reward_dict['r_total'] = self.reward_dict['stable'] + self.reward_dict['actions']  #
 
         # check if done
         dones = np.zeros((observations.shape[0],))
@@ -508,6 +395,7 @@ class InvertedPendulumEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
         if not batch_mode:
             return self.reward_dict['r_total'][0], dones[0]
         return self.reward_dict['r_total'], dones
+
 
     def get_score(self, obs):
         pendulum_angle_after = obs[1]
@@ -640,16 +528,20 @@ class InvertedPendulumEnv3(mujoco_env.MujocoEnv, utils.EzPickle):
         # get vars
         pendulum_angle = observations[:, 1]
 
+
+        ##added hamada for mpe of inverted pendulum
         ##added hamada for mpe of inverted pendulum
         if str(type(actions.shape)) == "<class 'tuple'>":
-            actions = np.array([actions])
+            actions = actions.reshape(-1, 1)
+            # print((type(actions.shape)))
+            #print("hello {}".format(actions.shape))
 
         # calc rew
-        self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        # self.reward_dict['stable'] = np.cos(pendulum_angle)
-        self.reward_dict['stable'] = 10 - 50 * np.abs(pendulum_angle)
-        self.reward_dict['r_total'] = self.reward_dict['stable']
-
+        self.reward_dict['actions'] = np.where(pendulum_angle < 0.05, -0.01 * np.sum(np.square(actions), axis=1),
+                                               0)  # 0.1 * np.sum(np.square(actions), axis=1)
+        self.reward_dict['pendulum_angle'] = np.abs(pendulum_angle)
+        self.reward_dict['stable'] = 10 - 50 * self.reward_dict['pendulum_angle']
+        self.reward_dict['r_total'] = self.reward_dict['stable'] + self.reward_dict['actions']  #
         # check if done
         dones = np.zeros((observations.shape[0],))
         dones[np.abs(pendulum_angle) > 360] = 1
@@ -659,45 +551,6 @@ class InvertedPendulumEnv3(mujoco_env.MujocoEnv, utils.EzPickle):
             return self.reward_dict['r_total'][0], dones[0]
         return self.reward_dict['r_total'], dones
 
-    def get_reward1(self, observations, actions):
-
-        """get rewards of a given (observations, actions) pair
-
-        Args:
-            observations: (batchsize, obs_dim) or (obs_dim,)
-            actions: (batchsize, ac_dim) or (ac_dim,)
-
-        Return:
-            r_total: (batchsize,1) or (1,), reward for that pair
-            done: (batchsize,1) or (1,), True if reaches terminal state
-        """
-
-        # initialize and reshape as needed, for batch mode
-        self.reward_dict = {}
-        if len(observations.shape) == 1:
-            observations = np.expand_dims(observations, axis=0)
-            actions = np.expand_dims(actions, axis=0)
-            batch_mode = False
-        else:
-            batch_mode = True
-
-        # get vars
-        pendulum_angle = observations[:, 1]
-
-        # calc rew
-        self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        #self.reward_dict['stable'] = np.cos(pendulum_angle)
-        self.reward_dict['stable'] = 10-50*np.abs(pendulum_angle)
-        self.reward_dict['r_total'] = self.reward_dict['stable']+self.reward_dict['actions'] #self.reward_dict['actions'] + self.reward_dict['stable']
-
-        # check if done
-        dones = np.zeros((observations.shape[0],))
-        dones[np.abs(pendulum_angle) > 360] = 1
-
-        # return
-        if not batch_mode:
-            return self.reward_dict['r_total'][0], dones[0]
-        return self.reward_dict['r_total'], dones
 
     def get_score(self, obs):
         pendulum_angle_after = obs[1]

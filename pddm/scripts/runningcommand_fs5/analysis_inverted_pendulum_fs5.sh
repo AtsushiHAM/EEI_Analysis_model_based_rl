@@ -57,15 +57,15 @@ COMMENTOUT
 ##########################
 ###10 times evaluation####0 1 2 3 4 5 6 7 8 9 10
 ##########################
-for running_times in 10 11 12 13 14 15 16 17 18 19
+for running_times in 20 21 22 23 24 25 26 27 28 29
 do
 
   echo running_times $running_times
   ### No torque sensor####
   python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu --reward_type st
-  python ~/Documents/pddm-master/pddm/scripts/visualize_iteration_graph.py --eval --save_name mppi_delta_5_mod_rew --iter_num $running_times --job_path $job_path_mppi --save_dir $job_path_pid
-  python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu --reward_type st
-  python ~/Documents/pddm-master/pddm/scripts/visualize_iteration_graph.py --eval --save_name rand_delta_5_mod_rew --iter_num $running_times --job_path $job_path_rand --save_dir $job_path_pid
+  #python ~/Documents/pddm-master/pddm/scripts/visualize_iteration_graph.py --eval --save_name mppi_delta_5_mod_rew --iter_num $running_times --job_path $job_path_mppi --save_dir $job_path_pid
+  #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu --reward_type st
+  #python ~/Documents/pddm-master/pddm/scripts/visualize_iteration_graph.py --eval --save_name rand_delta_5_mod_rew --iter_num $running_times --job_path $job_path_rand --save_dir $job_path_pid
   ### 1 torque sensor####
   #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f1 --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu --reward_type st_at
   #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand_f1 --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu --reward_type st_at

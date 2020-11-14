@@ -84,7 +84,7 @@ class MPCRollout:
         self.controller_pid = PID_Policy(
             self.env, self.dyn_models, self.reward_func, rand_policy,
             self.use_ground_truth_dynamics,
-            execute_sideRollouts, plot_sideRollouts, params, save_dir, iter)
+            execute_sideRollouts, plot_sideRollouts, params, save_dir, iter,control_delta)
 
 
         self.controller_reacer_pid = Reacher_PID(

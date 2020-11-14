@@ -32,7 +32,7 @@ import time
 import re
 from pylab import rcParams
 rcParams['figure.figsize'] = 30,30
-
+plt.rcParams["font.size"] = 18
 def vis_iter_graph(args, load_dir0,load_dir1,load_dir2):
 
     ##########################
@@ -149,7 +149,7 @@ def vis_iter_graph(args, load_dir0,load_dir1,load_dir2):
                 plt.plot(perturb0[:until_where], 'b')
                 plt.plot(perturb1[:until_where], 'r')
                 plt.plot(perturb2[:until_where], 'g')
-                plt.ylabel("perturb{}".format(k))
+                plt.ylabel("perturb{}".format(k),fontsize=30)
         for i in range(actions0.shape[1]):
             if args.perturb:
                 plt.subplot(subfigs,1,perturb0.shape[1]+i+1)
@@ -158,7 +158,7 @@ def vis_iter_graph(args, load_dir0,load_dir1,load_dir2):
             plt.plot(actions0[:until_where,i],'b')
             plt.plot(actions1[:until_where, i], 'r')
             plt.plot(actions2[:until_where, i], 'g')
-            plt.ylabel("action{}".format(i))
+            plt.ylabel("action{}".format(i),fontsize=30)
         for j,ind in enumerate(state_index) :
             if args.perturb:
                 plt.subplot(subfigs, 1, j+actions0.shape[1]+1+perturb0.shape[1])
@@ -167,7 +167,7 @@ def vis_iter_graph(args, load_dir0,load_dir1,load_dir2):
             plt.plot(states0[:until_where, ind],'b')
             plt.plot(states1[:until_where, ind], 'r')
             plt.plot(states2[:until_where, ind], 'g')
-            plt.ylabel("state{}".format(ind))
+            plt.ylabel("state{}".format(ind),fontsize=30)
         if args.eval:
             plt.savefig(save_dir + "/eval_{}_iter{}_rollout{}_{}".format(args.save_name, str(args.iter_num), str(vis_index),args.data_type),
                         bbox_inches='tight')
