@@ -30,6 +30,30 @@ job_path_rand_f15="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force
 job_path_mppi_f225="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-12/control_delta_1/mppi_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v225/2020-11-12_09-06-41/reacher"
 job_path_rand_f225="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-12/control_delta_1/rand_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v225/2020-11-12_12-50-19/reacher"
 job_path_pid="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_pid/2020-11-11/control_delta_1/reacher_pid_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v6/2020-11-11_14-54-03/reacher"
+##############################
+###job path ########## 11 14 st_0.01at
+##############################
+job_path_mppi="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re/2020-11-14/control_delta_1/mppi_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v0/2020-11-14_14-26-13/reacher"
+job_path_rand="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re/2020-11-12/control_delta_1/rand_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v0/2020-11-12_12-47-10/reacher"
+job_path_mppi_f12="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-14/control_delta_1/mppi_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v12/2020-11-14_14-27-58/reacher"
+job_path_rand_f12="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-12/control_delta_1/rand_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v12/2020-11-12_12-44-14/reacher"
+job_path_mppi_f15="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-14/control_delta_1/mppi_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v15/2020-11-14_14-28-46/reacher"
+job_path_rand_f15="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-12/control_delta_1/rand_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v15/2020-11-12_12-51-06/reacher"
+job_path_mppi_f225="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-14/control_delta_1/mppi_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v225/2020-11-14_14-29-18/reacher"
+job_path_rand_f225="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-14/control_delta_1/mppi_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v225/2020-11-14_14-29-18/reacher"
+job_path_pid="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_pid/2020-11-11/control_delta_1/reacher_pid_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v6/2020-11-11_14-54-03/reacher"
+##############################
+###job path ########## 11 15 st_beta0.6
+##############################
+job_path_mppi="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re/2020-11-15/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.6/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_reacher-v0/2020-11-15_13-10-29/reacher"
+#job_path_rand="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re/2020-11-12/control_delta_1/rand_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v0/2020-11-12_12-47-10/reacher"
+job_path_mppi_f12="//media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-15/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.6/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_reacher-v12/2020-11-15_13-12-07/reacher"
+#job_path_rand_f12="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-12/control_delta_1/rand_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v12/2020-11-12_12-44-14/reacher"
+job_path_mppi_f15="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-15/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.6/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_reacher-v15/2020-11-15_13-13-27/reacher"
+#job_path_rand_f15="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-12/control_delta_1/rand_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v15/2020-11-12_12-51-06/reacher"
+job_path_mppi_f225="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-15/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.6/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_reacher-v225/2020-11-15_13-14-25/reacher"
+#job_path_rand_f225="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-14/control_delta_1/mppi_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v225/2020-11-14_14-29-18/reacher"
+job_path_pid="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_pid/2020-11-11/control_delta_1/reacher_pid_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v6/2020-11-11_14-54-03/reacher"
 
 ##############################
 ###palameter ##########

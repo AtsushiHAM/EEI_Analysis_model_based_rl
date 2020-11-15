@@ -97,6 +97,6 @@
 ## mppi
 'mppi_kappa': [1],
 'mppi_mag_noise': [0.9],
-'mppi_beta': [0.6],
+'mppi_beta': [0.9],
 
 }
