@@ -57,7 +57,7 @@ class PID_Policy(object):
         self._control_delta = control_delta
 
         ###param for PID by Hamada
-        self.pid = PID(P=3., I=0., D=1., delta_time=self._control_delta*self.env.env.env.dt, target_pos=0.)
+        self.pid = PID(P=7., I=0., D=2., delta_time=self._control_delta*self.env.env.env.dt, target_pos=0.)
 
     def get_action(self, step_number, curr_state_K, actions_taken_so_far,
                    starting_fullenvstate, evaluating, take_exploratory_actions,iter,rollout_num):

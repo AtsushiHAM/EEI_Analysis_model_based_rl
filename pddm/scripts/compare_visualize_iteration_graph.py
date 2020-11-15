@@ -142,7 +142,7 @@ def vis_iter_graph(args, load_dir0,load_dir1,load_dir2):
             state_index =[4,5,6,7,8,9 ]
 
         fig = plt.figure()
-        until_where = 500
+        until_where = 200
         if args.perturb:
             for k in range(perturb0.shape[1]):
                 plt.subplot(subfigs, 1, k + 1)

@@ -14,7 +14,7 @@
 
 import os
 os.environ["MKL_THREADING_LAYER"] = "GNU"
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 import numpy as np
 import numpy.random as npr
 import tensorflow as tf
@@ -556,9 +556,9 @@ def main():
     output_dir = general_args.output_dir
     if len(jobs) < 2: #by hamada
         simulation_ver =jobs[0]['job_name']
-        output_dir = '{}/{}/control_delta_{}/{}_{}/Controller_{}_Horizon{}_Can{}/Iter{}_Rollout{}_Step{}/ensemble{}_num{}_depth{}/{}'.format(output_dir,
-                                                                                    time.strftime("%Y-%m-%d"),general_args.control_delta,jobs[0]['controller_type'],general_args.reward_type,
-                                                                                     jobs[0]['horizon'],jobs[0]['num_control_samples'],
+        output_dir = '{}/{}/control_delta_{}/Controller_{}_Horizon{}_Can{}_beta{}/Iter{}_Rollout{}_Step{}/ensemble{}_num{}_depth{}/{}/{}'.format(output_dir,
+                                                                                    time.strftime("%Y-%m-%d"),general_args.control_delta,jobs[0]['controller_type'],
+                                                                                     jobs[0]['horizon'],jobs[0]['num_control_samples'],jobs[0]['mppi_beta'],
                                                                                     jobs[0]['num_iters'],jobs[0]['num_trajectories_per_iter'],jobs[0]['rollout_length'],
                                                                                     jobs[0]['ensemble_size'],jobs[0]['num_fc_layers'],jobs[0]['depth_fc_layers'],
                                                                                                                          jobs[0]['env_name'],
