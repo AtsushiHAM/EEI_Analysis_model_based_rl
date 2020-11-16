@@ -95,7 +95,7 @@
 'cem_num_elites': [5],
 
 ## mppi
-'mppi_kappa': [1],
+'mppi_kappa': [10],
 'mppi_mag_noise': [0.9],
 'mppi_beta': [0.9],
 
