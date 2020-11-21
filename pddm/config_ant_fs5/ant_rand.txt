@@ -18,7 +18,7 @@
 ##### run options
 #########################
 
-'job_name': ['walker'],
+'job_name': ['ant'],
 'seed': [0],
 
 #########################
@@ -26,10 +26,10 @@
 #########################
 
 ## env
-'env_name': ['pddm_walker2d-v0'],
-'rollout_length': [500],
-'num_iters': [50],
-'num_trajectories_per_iter': [20],
+'env_name': ['pddm_ant-v0'],
+'rollout_length': [200],
+'num_iters': [100],
+'num_trajectories_per_iter': [30],
 
 ## continue
 'continue_run': [-1],
@@ -61,7 +61,7 @@
 'rand_policy_sample_velocities': [False],
 'rand_policy_vel_min': [0],
 'rand_policy_vel_max': [0],
-'rand_policy_hold_action': [1],
+'rand_policy_hold_action': [5],
 
 ##########################
 ##### dynamics model
@@ -69,7 +69,7 @@
 
 ## arch
 'num_fc_layers': [2],
-'depth_fc_layers': [250],
+'depth_fc_layers': [400],
 'ensemble_size': [3],
 'K': [1],
 
@@ -78,8 +78,8 @@
 'always_use_savedModel': [False],
 'batchsize': [512],
 'lr': [0.001],
-'nEpoch': [40],
-'nEpoch_init': [40],
+'nEpoch': [50],
+'nEpoch_init': [50],
 
 ##########################
 ##### controller
@@ -87,15 +87,16 @@
 
 ## MPC
 'horizon': [20],
-'num_control_samples': [1000],
+'num_control_samples': [500],
 'controller_type': ['rand'],
 
 ## cem
 'cem_max_iters': [3],
-'cem_num_elites': [5],
+'cem_num_elites': [20],
 
 ## mppi
 'mppi_kappa': [10],
 'mppi_mag_noise': [0.8],
 'mppi_beta': [0.7],
+
 }
