@@ -5,19 +5,20 @@
 ##############################
 eval_iteration="~/Documents/pddm-master/pddm/scripts/eval_iteration.py"
 
+
 ##############################
-###job path ########## 11 15 st_beta0.4
+###job path ########## 11 18 st_0.01at toqque limit
 ##############################
-job_path_mppi="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re/2020-11-15/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.4/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_reacher-v0/2020-11-15_19-18-44/reacher"
+job_path_mppi="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re/2020-11-18/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_reacher-v0/2020-11-18_23-17-30/reacher"
 #job_path_rand="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re/2020-11-12/control_delta_1/rand_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v0/2020-11-12_12-47-10/reacher"
-job_path_mppi_f12="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-15/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.4/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_reacher-v12/2020-11-15_19-19-16/reacher"
+job_path_mppi_f12="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-18/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_reacher-v12/2020-11-18_23-18-20/reacher"
 #job_path_rand_f12="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-12/control_delta_1/rand_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v12/2020-11-12_12-44-14/reacher"
-job_path_mppi_f15="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-15/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.4/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_reacher-v15/2020-11-15_19-20-17/reacher"
+job_path_mppi_f15="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-18/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_reacher-v15/2020-11-18_23-18-41/reacher"
 #job_path_rand_f15="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-12/control_delta_1/rand_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v15/2020-11-12_12-51-06/reacher"
-job_path_mppi_f225="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-15/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.4/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_reacher-v225/2020-11-15_19-20-56/reacher"
+job_path_mppi_f225="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-18/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_reacher-v225/2020-11-18_23-19-05/reacher"
 #job_path_rand_f225="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_force/2020-11-14/control_delta_1/mppi_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v225/2020-11-14_14-29-18/reacher"
 job_path_pid="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/re_pid/2020-11-11/control_delta_1/reacher_pid_st/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_reacher-v6/2020-11-11_14-54-03/reacher"
-
+##############################
 
 ##############################
 ###palameter ##########
@@ -40,14 +41,14 @@ do
   if $running_times<1 ; then
    ### No torque sensor####
    echo running_times and mpe $running_times
-   #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
+   python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
    #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
    ### 1 torque sensor####
 
-   #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f12 --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
+   python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f12 --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
    #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand_f12 --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
    ### 2 torque sensor####
-   #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f15 --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
+   python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f15 --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
    #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand_f15 --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
    ### 3 torque sensor####
    python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f225 --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
@@ -58,20 +59,20 @@ do
   else
     echo running_times $running_times
     ### No torque sensor####
-    #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi --running_times $running_times --iter_num $iter_num  --control_delta $control_delta --use_gpu
+    python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi --running_times $running_times --iter_num $iter_num  --control_delta $control_delta --use_gpu
     #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand --running_times $running_times --iter_num $iter_num  --control_delta $control_delta --use_gpu #false
     ### 1 torque sensor####
-    #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f12 --running_times $running_times --iter_num $iter_num  --control_delta $control_delta --use_gpu
+    python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f12 --running_times $running_times --iter_num $iter_num  --control_delta $control_delta --use_gpu
     #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand_f12 --running_times $running_times --iter_num $iter_num  --control_delta $control_delta --use_gpu
     ### 2 torque sensor####
-    #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f15 --running_times $running_times --iter_num $iter_num  --control_delta $control_delta --use_gpu
+    python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f15 --running_times $running_times --iter_num $iter_num  --control_delta $control_delta --use_gpu
     #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand_f15 --running_times $running_times --iter_num $iter_num --control_delta $control_delta --use_gpu
     ### 3 torque sensor####
     python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f225 --running_times $running_times --iter_num $iter_num  --control_delta $control_delta --use_gpu
     #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand_f225 --running_times $running_times --iter_num $iter_num --control_delta $control_delta --use_gpu
 
     ### pid ####
-    #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_pid --running_times $running_times --iter_num $iter_num  --control_delta $control_delta --reward_type st
+    python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_pid --running_times $running_times --iter_num $iter_num  --control_delta $control_delta --reward_type st
 
   fi
 
@@ -114,10 +115,16 @@ COMMENTOUT
 ##box plot all
 ##########
 
-python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_mppi_f12 $job_path_mppi_f15 $job_path_mppi_f225 $job_path_mppi $job_path_pid  --save_dir $job_path_pid  --data_type rewards --save_num mppi_delta1_all
-python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_mppi_f12 $job_path_mppi_f15 $job_path_mppi_f225 $job_path_mppi $job_path_pid  --save_dir $job_path_pid  --data_type eei --save_num mppi_delta1_all
-python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_mppi_f12 $job_path_mppi_f15 $job_path_mppi_f225 $job_path_mppi $job_path_pid  --save_dir $job_path_pid  --data_type ene --save_num mppi_delta1_all
-python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_mppi_f12 $job_path_mppi_f15 $job_path_mppi_f225 $job_path_mppi $job_path_pid  --save_dir $job_path_pid  --data_type er --save_num mppi_delta1_all
+python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_mppi_f12 $job_path_mppi_f15 $job_path_mppi_f225 $job_path_mppi  --save_dir $job_path_pid  --data_type rewards --save_num mppi_delta1_all
+python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_mppi_f12 $job_path_mppi_f15 $job_path_mppi_f225 $job_path_mppi   --save_dir $job_path_pid  --data_type eei --save_num mppi_delta1_all
+python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_mppi_f12 $job_path_mppi_f15 $job_path_mppi_f225 $job_path_mppi   --save_dir $job_path_pid  --data_type ene --save_num mppi_delta1_all
+python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_mppi_f12 $job_path_mppi_f15 $job_path_mppi_f225 $job_path_mppi  --save_dir $job_path_pid  --data_type er --save_num mppi_delta1_all
+
+python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_rand_f12 $job_path_rand_f15 $job_path_rand_f225 $job_path_rand  --save_dir $job_path_pid  --data_type rewards --save_num rand_delta1_all
+python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_rand_f12 $job_path_rand_f15 $job_path_rand_f225 $job_path_rand   --save_dir $job_path_pid  --data_type eei --save_num rand_delta1_all
+python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_rand_f12 $job_path_rand_f15 $job_path_rand_f225 $job_path_rand   --save_dir $job_path_pid  --data_type ene --save_num rand_delta1_all
+python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_rand_f12 $job_path_rand_f15 $job_path_rand_f225 $job_path_rand  --save_dir $job_path_pid  --data_type er --save_num rand_delta1_all
+
 
 #python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_rand_f12 $job_path_rand_f15 $job_path_mppi_f225 $job_path_rand $job_path_pid  --save_dir $job_path_pid  --data_type rewards --save_num rand_delta1_all
 #python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $job_path_rand_f12 $job_path_rand_f15 $job_path_mppi_f225 $job_path_rand $job_path_pid  --save_dir $job_path_pid  --data_type eei --save_num rand_delta1_all

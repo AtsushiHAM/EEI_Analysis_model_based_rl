@@ -14,7 +14,7 @@
 
 import os
 os.environ["MKL_THREADING_LAYER"] = "GNU"
-os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 import numpy as np
 import numpy.random as npr
 import tensorflow as tf

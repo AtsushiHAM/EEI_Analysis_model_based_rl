@@ -28,6 +28,7 @@ from pddm.utils.utils import get_actual_EEI_kai
 from pddm.classic_pollicy.pid_policy import PID_Policy
 from pddm.classic_pollicy.reacher_pid import  Reacher_PID
 import os
+from pddm.utils.helper_funcs import render_env
 
 
 class MPCRollout:
@@ -100,7 +101,12 @@ class MPCRollout:
 
         else:
             if sim_ver == "inverted_pendulum":
-                self._purturb_data = np.load(os.getcwd() + "/perterb.npy").reshape([100, 30])
+                file_name="/perterb.npy"
+                self._purturb_data = np.load(os.getcwd() + file_name ).reshape([100, 30])
+                print("file name {}".format(file_name))
+                #file = open(save_dir+'/perteb.txt', 'w')
+                #file.write(file_name)
+                #file.close()
         self._sim_ver = sim_ver
         self._control_delta = control_delta
         print('hello')
@@ -205,7 +211,7 @@ class MPCRollout:
                     if self._perturb:
                         perturb = True
                         noise = np.random.uniform(-1, 1)
-                        print("add noise heyhey")
+                        print("add noise heyhey {}".format(noise))
                         self.env.env.env.perturb_joint(noise)
                         #self.env.env.env.update_adversary(noise)
 
@@ -301,7 +307,7 @@ class MPCRollout:
                     best_action, predicted_states_list = get_action(
                         step, curr_state_K, actions_taken, starting_fullenvstate,
                         self.evaluating, take_exploratory_actions, iter, rollout_num)
-
+                    #render_env(self.env)
                 # noise the action, as needed
                 action_to_take = np.copy(best_action)
                 clean_action = np.copy(action_to_take)
@@ -322,7 +328,7 @@ class MPCRollout:
             ########################
             #print("action {} at {}".format(action_to_take, step))
             next_state, rew, done, env_info = self.env.step(action_to_take)
-
+            #render_env(self.env)
             #################################################
             #### get predicted next_state
             ########## use it to calculate model prediction error (mpe)

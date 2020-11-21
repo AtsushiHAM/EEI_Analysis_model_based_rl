@@ -57,7 +57,7 @@ class PID_Policy(object):
         self._control_delta = control_delta
 
         ###param for PID by Hamada
-        self.pid = PID(P=7., I=0., D=2., delta_time=self._control_delta*self.env.env.env.dt, target_pos=0.)
+        self.pid = PID(P=5., I=0., D=1.5, delta_time=self._control_delta*self.env.env.env.dt, target_pos=0.)
 
     def get_action(self, step_number, curr_state_K, actions_taken_so_far,
                    starting_fullenvstate, evaluating, take_exploratory_actions,iter,rollout_num):
@@ -92,7 +92,8 @@ class PID_Policy(object):
         theta = curr_state_K[0][1]
         best_action,_= self.pid.update(theta)
         best_action = best_action.reshape([1])
-        best_action=np.clip(best_action,-1,1)
+        #print("action {}".format(best_action))
+        best_action=np.clip( best_action, self.env.env.env.action_space.low, self.env.env.env.action_space.high)
 
         #pick worst action sequense added by Hamada
         resulting_states_list=[]

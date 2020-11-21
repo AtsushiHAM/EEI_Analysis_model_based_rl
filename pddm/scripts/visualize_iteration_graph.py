@@ -28,6 +28,10 @@ import pddm.envs
 from gym import wrappers
 import matplotlib.pyplot as plt
 import time
+from pylab import rcParams
+rcParams['figure.figsize'] = 30,30
+plt.rcParams["font.size"] = 25
+plt.rcParams["lines.linewidth"]= 10
 
 def vis_iter_graph(args, load_dir):
 
@@ -68,6 +72,8 @@ def vis_iter_graph(args, load_dir):
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
     iter_num ="iter"+str(args.iter_num)
+    from_wherer=0
+    until_where=200
     for vis_index in range(len(rollouts_info)):
 
         print("\n\nROLLOUT NUMBER ", vis_index, " .... num steps loaded: ", rollouts_info[vis_index]['actions'].shape[0])
@@ -78,18 +84,53 @@ def vis_iter_graph(args, load_dir):
         perturb = rollouts_info[vis_index]["disturbances"].reshape([rollouts_info[vis_index]["disturbances"].shape[0],1])
         subfigs = actions.shape[1] +states.shape[1] +perturb.shape[1]
         fig = plt.figure()
-        for k in range(perturb.shape[1]):
-            plt.subplot(subfigs,1,k+1)
-            plt.plot(perturb,'m')
-            plt.ylabel("perturb{}".format(k))
-        for i in range(actions.shape[1]):
-            plt.subplot(subfigs,1,perturb.shape[1]+i+1)
-            plt.plot(actions[:,i],'k')
-            plt.ylabel("action{}".format(i))
-        for j in range(states.shape[1]):
-            plt.subplot(subfigs, 1, j+actions.shape[1]+1+perturb.shape[1])
-            plt.plot(states[:, j])
-            plt.ylabel("state{}".format(j))
+
+        presentation=True
+        if presentation:
+            if args.perturb:
+                for k in range(perturb.shape[1]):
+                    plt.subplot(subfigs, 1, k + 1)
+                    plt.plot(perturb[:until_where], 'm')
+                    plt.ylabel("perturb{}".format(k))
+            for i in range(actions.shape[1]):
+                plt.subplot(subfigs, 1, perturb.shape[1] + i + 1)
+                plt.plot(actions[:until_where, i], 'k')
+                plt.ylabel("action{}".format(i))
+
+            plt.subplot(subfigs, 1, 0 + actions.shape[1] + 1 + perturb.shape[1])
+            plt.plot(states[from_wherer:until_where, 1], linestyle="solid")
+            plt.ylabel("state1")
+            plt.subplot(subfigs, 1, 1 + actions.shape[1] + 1 + perturb.shape[1])
+            plt.plot(states[from_wherer:until_where, 3], linestyle="dashed")
+            plt.ylabel("state3")
+            plt.subplot(subfigs, 1, 2 + actions.shape[1] + 1 + perturb.shape[1])
+            plt.plot(states[from_wherer:until_where, 4], linestyle="dotted")
+            plt.ylabel("state4")
+        else:
+            if args.perturb:
+                for k in range(perturb.shape[1]):
+                    plt.subplot(subfigs, 1, k + 1)
+                    plt.plot(perturb[from_wherer:until_where], 'm')
+                    plt.ylabel("perturb{}".format(k))
+
+            for i in range(actions.shape[1]):
+                plt.subplot(subfigs, 1, perturb.shape[1] + i + 1)
+                plt.plot(actions[from_wherer:until_where, i], 'k')
+                plt.ylabel("action{}".format(i))
+            for j in range(states.shape[1]):
+                plt.subplot(subfigs, 1, j + actions.shape[1] + 1 + perturb.shape[1])
+                if args.perturb:
+                    if j < 2:
+                        plt.plot(states[from_wherer:until_where, j], linestyle="solid")
+                    elif j >= 2 and j < 4:
+                        plt.plot(states[from_wherer:until_where, j], linestyle="dashed")
+                    else:
+                        plt.plot(states[from_wherer:until_where, j], linestyle="dotted")
+                else:
+                    plt.plot(states[from_wherer:until_where, j], linestyle="solid")
+                plt.ylabel("state{}".format(j))
+
+
         plt.savefig(save_dir + "/{}_iter{}_rollout{}".format(args.save_name,str(args.iter_num),str(vis_index)), bbox_inches='tight')
 
 

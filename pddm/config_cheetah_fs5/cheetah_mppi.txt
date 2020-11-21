@@ -18,7 +18,7 @@
 ##### run options
 #########################
 
-'job_name': ['reacher'],
+'job_name': ['cheetah'],
 'seed': [0],
 
 #########################
@@ -26,10 +26,10 @@
 #########################
 
 ## env
-'env_name': ['pddm_reacher-v12'],
-'rollout_length': [500],
-'num_iters': [30],
-'num_trajectories_per_iter': [10],
+'env_name': ['pddm_cheetah-v0'],
+'rollout_length': [1000],
+'num_iters': [70],
+'num_trajectories_per_iter': [30],
 
 ## continue
 'continue_run': [-1],
@@ -52,9 +52,9 @@
 
 ## collect random rollouts
 'load_existing_random_data': [False],
-'num_rand_rollouts_train': [50],
+'num_rand_rollouts_train': [200],
 'num_rand_rollouts_val': [50],
-'rand_rollout_length': [500],
+'rand_rollout_length': [100],
 'use_threading': [True],
 
 ## sample random velocities vs. positions
@@ -87,8 +87,8 @@
 
 ## MPC
 'horizon': [20],
-'num_control_samples': [1000],
-'controller_type': ['rand'],
+'num_control_samples': [700],
+'controller_type': ['mppi'],
 
 ## cem
 'cem_max_iters': [3],

@@ -32,7 +32,8 @@ import time
 import re
 from pylab import rcParams
 rcParams['figure.figsize'] = 30,30
-plt.rcParams["font.size"] = 18
+plt.rcParams["font.size"] = 25
+plt.rcParams["lines.linewidth"]= 8
 def vis_iter_graph(args, load_dir0,load_dir1,load_dir2):
 
     ##########################
@@ -142,7 +143,7 @@ def vis_iter_graph(args, load_dir0,load_dir1,load_dir2):
             state_index =[4,5,6,7,8,9 ]
 
         fig = plt.figure()
-        until_where = 200
+        until_where = 300
         if args.perturb:
             for k in range(perturb0.shape[1]):
                 plt.subplot(subfigs, 1, k + 1)

@@ -26,3 +26,5 @@ import pddm.envs.cart_double_pole
 import pddm.envs.half_cheetah
 import pddm.envs.reacher
 import pddm.envs.sphere
+import pddm.envs.hopper
+import pddm.envs.walker2d

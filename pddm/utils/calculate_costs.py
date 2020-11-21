@@ -21,7 +21,7 @@ def cost_per_step(pt, prev_pt, costs, actions, dones, reward_func):
     costs[dones > 0] += 500
     costs[dones == 0] -= step_rews[dones == 0]
 
-    return costs, dones
+    return costs, dones #this is useful predict state
 
 
 def calculate_costs(resulting_states_list, actions, reward_func,
@@ -118,4 +118,4 @@ def calculate_costs(resulting_states_list, actions, reward_func,
         else:
             cost_for_ranking = mean_cost
 
-    return cost_for_ranking, mean_cost, std_cost
+    return cost_for_ranking, mean_cost, std_cost #thi is usedful

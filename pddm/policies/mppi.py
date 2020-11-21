@@ -63,6 +63,7 @@ class MPPI(object):
         self._save_dir = save_dir
         self._sim_ver = sim_ver
         self._control_delta = control_delta
+        print("action low: {}".format(self.env.env.action_space.low)[0])
 
 
     ###################################################################
@@ -111,21 +112,40 @@ class MPPI(object):
 
         # sample noise from normal dist, scaled by sigma
         # hamada scale change from 1to 3
-        if (self.sample_velocity):
-            eps_higherRange = np.random.normal(
-                loc=0, scale=1.0, size=(self.N, self.horizon,
-                                        self.ac_dim)) * self.sigma
-            lowerRange = 0.3 * self.sigma
-            num_lowerRange = int(0.1 * self.N)
-            eps_lowerRange = np.random.normal(
-                loc=0, scale=1.0, size=(num_lowerRange, self.horizon,
-                                        self.ac_dim)) * lowerRange
-            eps_higherRange[-num_lowerRange:] = eps_lowerRange
-            eps = eps_higherRange.copy()
+        if self._sim_ver =="inverted_pendulum":
+            #all_samples = np.clip(all_samples, -1, 1)*self.env.env.env.action_space.high
+            if (self.sample_velocity):
+                eps_higherRange = np.random.normal(
+                    loc=0, scale=1.0, size=(self.N, self.horizon,
+                                            self.ac_dim)) * self.sigma
+                lowerRange = 0.3 * self.sigma
+                num_lowerRange = int(0.1 * self.N)
+                eps_lowerRange = np.random.normal(
+                    loc=0, scale=1.0, size=(num_lowerRange, self.horizon,
+                                            self.ac_dim)) * lowerRange
+                eps_higherRange[-num_lowerRange:] = eps_lowerRange
+                eps = eps_higherRange.copy()
+            else:
+                eps = np.random.normal(
+                    loc=0, scale=1.0, size=(self.N, self.horizon,
+                                            self.ac_dim)) * self.sigma
         else:
-            eps = np.random.normal(
-                loc=0, scale=1.0, size=(self.N, self.horizon,
-                                        self.ac_dim)) * self.sigma
+            if (self.sample_velocity):
+                eps_higherRange = np.random.normal(
+                    loc=0, scale=1.0, size=(self.N, self.horizon,
+                                            self.ac_dim)) * self.sigma
+                lowerRange = 0.3 * self.sigma
+                num_lowerRange = int(0.1 * self.N)
+                eps_lowerRange = np.random.normal(
+                    loc=0, scale=1.0, size=(num_lowerRange, self.horizon,
+                                            self.ac_dim)) * lowerRange
+                eps_higherRange[-num_lowerRange:] = eps_lowerRange
+                eps = eps_higherRange.copy()
+            else:
+                eps = np.random.normal(
+                    loc=0, scale=1.0, size=(self.N, self.horizon,
+                                            self.ac_dim)) * self.sigma
+
 
 
 
@@ -148,7 +168,7 @@ class MPPI(object):
         # all_samples : [N, horizon, ac_dim]
 
         if self._sim_ver =="inverted_pendulum":
-            all_samples = np.clip(all_samples, -1, 1)*self.env.env.env.action_space.high
+            all_samples = np.clip(all_samples, -1, 1)#*self.env.env.env.action_space.high
             #all_samples = np.clip(all_samples, self.env.env.env.action_space.low, self.env.env.env.action_space.high)
         else:
             all_samples = np.clip(all_samples, -1, 1)

@@ -161,7 +161,7 @@ class Saver:
         plot_mean_std(scores[:, 0], scores[:, 1],
                       self.save_dir + '/scores_perIter')
 
-        if simulateion_ver=="inverted_pendulum" or "reacher":
+        if simulateion_ver=="inverted_pendulum" or simulateion_ver=="reacher":
             plot_mean_std(EEI[:, 0], EEI[:, 1],
                       self.save_dir + '/EEI_perIter')
             plot_mean_std(ER[:, 0], ER[:, 1],

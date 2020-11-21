@@ -69,8 +69,9 @@ class InvertedPendulumEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         # calc rew
         self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
         self.reward_dict['stable'] = np.abs(pendulum_angle)
-        self.reward_dict['r_allive'] = np.array(10)  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
-        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * (self.reward_dict['stable'] + 0.0 * self.reward_dict['actions'])
+        self.reward_dict['r_allive'] = np.array(10)
+        self.reward_dict['ac_weight']= 0.004#0#server0.004# np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * (self.reward_dict['stable'] + self.reward_dict['ac_weight'] * self.reward_dict['actions'])
         #print("mod_rew")
 
         # check if done
@@ -127,7 +128,9 @@ class InvertedPendulumEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
         # set reset pose/vel
         self.reset_pose = self.init_qpos + self.np_random.uniform(
-                        low=-.01, high=.01, size=self.model.nq)
+            low=-.01, high=.01, size=self.model.nq)
+        """self.reset_pose = self.init_qpos + self.np_random.uniform(
+            low=[-np.pi, -0.01], high=[np.pi, 0.01], size=self.model.nq)"""
         self.reset_vel = self.init_qvel + self.np_random.uniform(size=self.model.nv, low=-0.01, high=0.01)
 
         #reset the env to that pose/vel
@@ -228,7 +231,8 @@ class InvertedPendulumEnv1(mujoco_env.MujocoEnv, utils.EzPickle):
         self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
         self.reward_dict['stable'] = np.abs(pendulum_angle)
         self.reward_dict['r_allive'] = np.array(10)  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
-        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * (self.reward_dict['stable'] + 0.0 * self.reward_dict['actions'])
+        self.reward_dict['ac_weight'] = 0.0  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * (self.reward_dict['stable'] + self.reward_dict['ac_weight'] * self.reward_dict['actions'])
 
         # check if done
         dones = np.zeros((observations.shape[0],))
@@ -285,7 +289,9 @@ class InvertedPendulumEnv1(mujoco_env.MujocoEnv, utils.EzPickle):
 
         # set reset pose/vel
         self.reset_pose = self.init_qpos + self.np_random.uniform(
-                        low=-.01, high=.01, size=self.model.nq)
+            low=-.01, high=.01, size=self.model.nq)
+        """self.reset_pose = self.init_qpos + self.np_random.uniform(
+        #    low=[-np.pi, -0.01], high=[np.pi, 0.01], size=self.model.nq)"""
         self.reset_vel = self.init_qvel + self.np_random.uniform(size=self.model.nv, low=-0.01, high=0.01)
 
         #reset the env to that pose/vel
@@ -382,7 +388,8 @@ class InvertedPendulumEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
         self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
         self.reward_dict['stable'] = np.abs(pendulum_angle)
         self.reward_dict['r_allive'] = np.array(10)  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
-        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * (self.reward_dict['stable'] + 0.0 * self.reward_dict['actions'])
+        self.reward_dict['ac_weight'] = 0.#0.004  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * (self.reward_dict['stable'] + self.reward_dict['ac_weight'] * self.reward_dict['actions'])
 
         # check if done
         dones = np.zeros((observations.shape[0],))
@@ -439,7 +446,10 @@ class InvertedPendulumEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
 
         # set reset pose/vel
         self.reset_pose = self.init_qpos + self.np_random.uniform(
-                        low=-.01, high=.01, size=self.model.nq)
+            low=-.01, high=.01, size=self.model.nq)
+        """
+        self.reset_pose = self.init_qpos + self.np_random.uniform(
+                       low=[-np.pi, -0.01], high=[np.pi, 0.01], size=self.model.nq)"""
         self.reset_vel = self.init_qvel + self.np_random.uniform(size=self.model.nv, low=-0.01, high=0.01)
 
         #reset the env to that pose/vel
@@ -537,7 +547,9 @@ class InvertedPendulumEnv3(mujoco_env.MujocoEnv, utils.EzPickle):
         self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
         self.reward_dict['stable'] = np.abs(pendulum_angle)
         self.reward_dict['r_allive'] = np.array(10)  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
-        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * (self.reward_dict['stable'] + 0.0 * self.reward_dict['actions'])
+        self.reward_dict['ac_weight'] = 0.  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * ( self.reward_dict['stable'] + self.reward_dict['ac_weight'] * self.reward_dict['actions'])
+
         # check if done
         dones = np.zeros((observations.shape[0],))
         dones[np.abs(pendulum_angle) > 360] = 1
@@ -591,7 +603,10 @@ class InvertedPendulumEnv3(mujoco_env.MujocoEnv, utils.EzPickle):
 
         # set reset pose/vel
         self.reset_pose = self.init_qpos + self.np_random.uniform(
-                        low=-.01, high=.01, size=self.model.nq)
+            low=-.01, high=.01, size=self.model.nq)
+        """
+        self.reset_pose = self.init_qpos + self.np_random.uniform(
+            low=[-np.pi, -0.01], high=[np.pi, 0.01], size=self.model.nq)"""
         self.reset_vel = self.init_qvel + self.np_random.uniform(size=self.model.nv, low=-0.01, high=0.01)
 
         #reset the env to that pose/vel

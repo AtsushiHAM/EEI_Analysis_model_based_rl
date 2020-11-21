@@ -27,9 +27,9 @@ class Policy_Random(object):
             self.low_val = -1 * np.ones(self.env.action_space.low.shape)
             self.high_val = np.ones(self.env.action_space.high.shape)
         elif job[0] == 'IP':
-            self.low_val = self.env.env.action_space.low * np.ones(self.env.action_space.low.shape)
-            self.high_val = self.env.env.action_space.high*np.ones(self.env.action_space.high.shape)
-
+            self.low_val = self.env.env.action_space.low[0] * np.ones(self.env.action_space.low.shape)
+            self.high_val = self.env.env.action_space.high[0]*np.ones(self.env.action_space.high.shape)
+            print("high and low {} and {}".format(self.high_val,self.low_val))
         self.shape = self.env.action_space.shape
         self.counter = 0
 
@@ -74,7 +74,7 @@ class Policy_Random(object):
                 #new action
                 action = prev_action + self.vel_sample
 
-        ### else, for a torque-controlled robot,
+        ### else, for a torque-controlled robot,pl
         # just uniformly sample random actions
         else:
             if (self.counter%hold_action)==0:

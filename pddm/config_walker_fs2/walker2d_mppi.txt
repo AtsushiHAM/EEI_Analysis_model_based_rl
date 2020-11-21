@@ -18,7 +18,7 @@
 ##### run options
 #########################
 
-'job_name': ['reacher'],
+'job_name': ['walker'],
 'seed': [0],
 
 #########################
@@ -26,10 +26,10 @@
 #########################
 
 ## env
-'env_name': ['pddm_reacher-v12'],
+'env_name': ['pddm_walker2d-v0'],
 'rollout_length': [500],
-'num_iters': [30],
-'num_trajectories_per_iter': [10],
+'num_iters': [50],
+'num_trajectories_per_iter': [20],
 
 ## continue
 'continue_run': [-1],
@@ -88,15 +88,15 @@
 ## MPC
 'horizon': [20],
 'num_control_samples': [1000],
-'controller_type': ['rand'],
+'controller_type': ['mppi'],
 
 ## cem
 'cem_max_iters': [3],
 'cem_num_elites': [5],
 
 ## mppi
-'mppi_kappa': [1],
-'mppi_mag_noise': [0.9],
-'mppi_beta': [0.9],
+'mppi_kappa': [10],
+'mppi_mag_noise': [0.8],
+'mppi_beta': [0.7],
 
 }
