@@ -58,9 +58,9 @@ The process of (model training + rollout collection) serves as a single iteratio
 To see available parameters to set, see the files in the configs folder, as well as the list of parameters in convert_to_parser_args.py.  <br/><br/>
 
 
-## C. Run experiments for Furuta Inverted Pendulum  ##
+## C. Run experiments ##
 
-**Train:**
+**Train for Furuta Inverted Pendulum:**
 
 ```bash
 bash inverted_pendulum.sh
@@ -70,7 +70,7 @@ bash inverted_pendulum_force3.sh
 bash inverted_pendulum_pid.sh
 ```
 
-**Evaluate a pre-trained model and compare box plots:**
+**Evaluate a pre-trained model and compare box plots  for Furuta Inverted Pendulum:**
 
 ```bash
 bash analysis_inverted_pendulum_fs1.sh
