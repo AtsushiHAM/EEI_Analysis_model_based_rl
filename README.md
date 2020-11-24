@@ -3,7 +3,7 @@ Code is based on https://github.com/google-research/pddm, https://github.com/flo
 
 **Contents of this README:**
 - [A. Getting Started](#a-getting-started)
-- [B. Quick Overview](b-quick-overview)
+- [B. Quick Overview](#b-quick-overview)
 - [C. Run experiments](#c-run-experiments)
 <br/><br/>
 
