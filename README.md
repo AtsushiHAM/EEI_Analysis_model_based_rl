@@ -1,5 +1,5 @@
 # EEI_Analysis_model_based_rl
-Code is based on https://github.com/google-research/pddm, https://github.com/flowersteam/rl-difference-testing and https://github.com/deepmind/dm_control
+Thease code are based on https://github.com/google-research/pddm, https://github.com/flowersteam/rl-difference-testing and https://github.com/deepmind/dm_control
 
 **Contents of this README:**
 - [A. Getting Started](#a-getting-started)
