@@ -4,8 +4,7 @@ Code is based on https://github.com/google-research/pddm, https://github.com/flo
 **Contents of this README:**
 - [A. Getting Started](#a-getting-started)
 - [B. Quick Overview](b-quick-overview)
-- [C. Train and visualize some tests](#c-train-and-visualize-some-tests)
-- [D. Run experiments](#d-run-experiments)
+- [C. Run experiments](#c-run-experiments)
 <br/><br/>
 
 
@@ -59,66 +58,22 @@ The process of (model training + rollout collection) serves as a single iteratio
 To see available parameters to set, see the files in the configs folder, as well as the list of parameters in convert_to_parser_args.py.  <br/><br/>
 
 
-
-
-## C. Train and visualize some tests ##
-
-Cheetah:
-```bash
-python train.py --config ../config/short_cheetah_test.txt --output_dir ../output --use_gpu
-MJPL python visualize_iteration.py --job_path ../output/short_cheetah_test --iter_num 0
-```
-
-Ant:
-```bash
-python train.py --config ../config/short_ant_test.txt --output_dir ../output --use_gpu
-MJPL python visualize_iteration.py --job_path ../output/short_ant_test --iter_num 0
-```
-
-Dclaw turn valve: <br/>
-Note that this will not actually quite work, but might be reasonable.
-```bash
-python train.py --config ../config/short_dclaw_turn_test.txt --output_dir ../output --use_gpu
-MJPL python visualize_iteration.py --job_path ../output/short_dclaw_turn_test --iter_num 0
-```
-
-Dclaw turn valve:<br/>
-Note that this will work well but also take a while to run, because it's using ground-truth Mujoco dynamics for planning. It should take approximately 6 minutes on a standard laptop without any GPU.
-```bash
-python train.py --config ../config/test_dclaw_turn_gt.txt --output_dir ../output --use_gpu
-MJPL python visualize_iteration.py --job_path ../output/dclaw_turn_gt --iter_num 0
-```
-
-Shadowhand in-hand cube rotation:<br/>
-Note that this will work well but also take a while to run, because it's using ground-truth Mujoco dynamics for planning. It should take approximately 6 minutes on a standard laptop without any GPU.
-```bash
-python train.py --config ../config/test_cube_gt.txt --output_dir ../output --use_gpu
-MJPL python visualize_iteration.py --job_path ../output/cube_gt --iter_num 0
-```
-
-Shadowhand Baoding balls:<br/>
-Note that this will work well but also take a while to run, because it's using ground-truth Mujoco dynamics for planning. It should take approximately 20 minutes on a standard laptop without any GPU.
-```bash
-python train.py --config ../config/test_baoding_gt.txt --output_dir ../output --use_gpu
-MJPL python visualize_iteration.py --job_path ../output/baoding_gt --iter_num 0
-```
-<br/><br/>
-
-
-## D. Run experiments ##
+## C. Run experiments for Furuta Inverted Pendulum  ##
 
 **Train:**
 
 ```bash
-python train.py --config ../config/dclaw_turn.txt --output_dir ../output --use_gpu
-python train.py --config ../config/baoding.txt --output_dir ../output --use_gpu
-python train.py --config ../config/cube.txt --output_dir ../output --use_gpu
+bash inverted_pendulum.sh
+bash inverted_pendulum_force1.sh
+bash inverted_pendulum_force2.sh
+bash inverted_pendulum_force3.sh
+bash inverted_pendulum_pid.sh
 ```
 
-**Evaluate a pre-trained model:**
+**Evaluate a pre-trained model and compare box plots:**
 
 ```bash
-python eval_iteration.py --job_path ../output/dclaw_turn --iter_num 0 --num_eval_rollouts 1 --eval_run_length 40
+bash analysis_inverted_pendulum_fs1.sh
 ```
 
 **Visualize:**
@@ -126,13 +81,5 @@ python eval_iteration.py --job_path ../output/dclaw_turn --iter_num 0 --num_eval
 ```bash
 MJPL python visualize_iteration.py --job_path ../output/dclaw_turn --eval
 MJPL python visualize_iteration.py --job_path ../output/dclaw_turn --iter_num 0
-```
-
-**Compare runs:**
-
-Plot rewards (or scores) of multiple runs on the same plot. Note that custom labels are optional:
-```bash
-python compare_results.py -j ../output/runA ../output/runB -l 'mycustomlabel runA' -l 'mycustomlabel runB' --plot_rew
-python compare_results.py -j ../output/runA ../output/runB -l 'mycustomlabel runA' -l 'mycustomlabel runB'
 ```
 
