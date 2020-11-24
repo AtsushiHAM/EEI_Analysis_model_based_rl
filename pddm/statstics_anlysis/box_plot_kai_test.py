@@ -7,8 +7,8 @@ import os
 from statannot import add_stat_annotation
 import time
 from pylab import rcParams
-rcParams['figure.figsize'] = 20,20
-plt.rcParams["font.size"] = 25
+#rcParams['figure.figsize'] = 20,20
+#plt.rcParams["font.size"] = 25
 
 
 

@@ -70,7 +70,7 @@ class InvertedPendulumEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
         self.reward_dict['stable'] = np.abs(pendulum_angle)
         self.reward_dict['r_allive'] = np.array(10)
-        self.reward_dict['ac_weight']= 0.004#0#server0.004# np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
+        self.reward_dict['ac_weight']= 0.00#4#0#server0.004# np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
         self.reward_dict['r_total'] = self.reward_dict['r_allive'] - 50 * (self.reward_dict['stable'] + self.reward_dict['ac_weight'] * self.reward_dict['actions'])
         #print("mod_rew")
 

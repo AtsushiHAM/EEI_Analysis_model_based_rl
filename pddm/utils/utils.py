@@ -18,8 +18,8 @@ import os
 import time
 #hamada added
 from pylab import rcParams
-rcParams['figure.figsize'] = 30,30
-plt.rcParams["font.size"] = 25
+rcParams['figure.figsize'] = 10,10
+plt.rcParams["font.size"] = 45
 plt.rcParams["lines.linewidth"]= 10
 
 def state_prediction_inverted_pendulum(env,reward_func,resulting_states_list,all_samples,starting_fullenvstate,actions_taken_so_far,
@@ -45,6 +45,12 @@ def state_prediction_inverted_pendulum(env,reward_func,resulting_states_list,all
             indices_to_vis = [0, 1, 2, 3, 4,5,6,7,8,9]
         elif re.findall('R.?e', str(type(env.env.env))):
             indices_to_vis = [4,5,6,7,8,9 ]
+        elif re.findall('H.?o', str(type(env.env.env))):
+            indices_to_vis = [5]
+        elif re.findall('W.?a', str(type(env.env.env))):
+            indices_to_vis = [6]
+
+
 
         curr_plot = 1
         num_plots = len(indices_to_vis)
@@ -75,9 +81,9 @@ def state_prediction_inverted_pendulum(env,reward_func,resulting_states_list,all
                 linewidth=5)
 
             curr_plot += 1
-            plt.xlabel("step",fontsize=25)
-            plt.ylabel("state{}".format(index_state_to_vis),fontsize=25)
-            plt.tick_params(labelsize=25)
+            plt.xlabel("step")
+            plt.ylabel("state{}".format(index_state_to_vis))
+            #plt.tick_params()
             # plt.legend(list_of_candidate,loc='upper left', bbox_to_anchor=(1, 1))
         #plt.legend(list_of_candidate, loc='upper right', )
         #plt.legend(list_of_candidate,fontsize=25)
