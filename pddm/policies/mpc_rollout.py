@@ -328,7 +328,7 @@ class MPCRollout:
             ########################
             #print("action {} at {}".format(action_to_take, step))
             next_state, rew, done, env_info = self.env.step(action_to_take)
-            #render_env(self.env)
+            render_env(self.env)
             #################################################
             #### get predicted next_state
             ########## use it to calculate model prediction error (mpe)

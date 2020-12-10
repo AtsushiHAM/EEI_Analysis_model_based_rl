@@ -119,7 +119,7 @@ def main():
     ax.set_xlabel('controller')
     if args.data_type == "eei":
         ax.set_ylabel('EEI')
-        #plt.ylim([0, 0.0004])
+        plt.ylim([0, 0.005])
     elif args.data_type == "rewards":
         ax.set_ylabel('Rewards')
     elif args.data_type == "ene":

@@ -81,11 +81,15 @@ def vis_iter_graph(args, load_dir):
         #visualize rollouts from this iteration
         states=rollouts_info[vis_index]["observations"]
         actions=rollouts_info[vis_index]["actions"]
-        perturb = rollouts_info[vis_index]["disturbances"].reshape([rollouts_info[vis_index]["disturbances"].shape[0],1])
-        subfigs = actions.shape[1] +states.shape[1] +perturb.shape[1]
+        if args.perturb:
+            perturb = rollouts_info[vis_index]["disturbances"].reshape(
+                [rollouts_info[vis_index]["disturbances"].shape[0], 1])
+            subfigs = actions.shape[1] +states.shape[1] +perturb.shape[1]
+        else:
+            subfigs = actions.shape[1] + states.shape[1]
         fig = plt.figure()
 
-        presentation=True
+        presentation=False
         if presentation:
             if args.perturb:
                 for k in range(perturb.shape[1]):
@@ -114,11 +118,16 @@ def vis_iter_graph(args, load_dir):
                     plt.ylabel("perturb{}".format(k))
 
             for i in range(actions.shape[1]):
-                plt.subplot(subfigs, 1, perturb.shape[1] + i + 1)
+                if args.perturb:
+                    plt.subplot(subfigs, 1, perturb.shape[1] + i + 1)
                 plt.plot(actions[from_wherer:until_where, i], 'k')
                 plt.ylabel("action{}".format(i))
             for j in range(states.shape[1]):
-                plt.subplot(subfigs, 1, j + actions.shape[1] + 1 + perturb.shape[1])
+            #for j in range(19,states.shape[1],3):
+                if args.perturb:
+                    plt.subplot(subfigs, 1, j + actions.shape[1] + 1 + perturb.shape[1])
+                else:
+                    plt.subplot(subfigs, 1, j + actions.shape[1] + 1 )
                 if args.perturb:
                     if j < 2:
                         plt.plot(states[from_wherer:until_where, j], linestyle="solid")

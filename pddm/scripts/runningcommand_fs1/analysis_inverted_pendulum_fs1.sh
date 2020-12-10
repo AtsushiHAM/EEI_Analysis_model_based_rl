@@ -16,17 +16,17 @@ job_path_mppi_f2="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip_force/
 #job_path_rand_f2="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip_force/2020-11-05/control_delta_1/rand/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum_force-v2/2020-11-05_13-08-41/inverted_pendulum"
 job_path_mppi_f3="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip_force/2020-11-15/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum_force-v3/2020-11-15_21-43-21/inverted_pendulum"
 #job_path_rand_f3="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip_force/2020-11-14/control_delta_1/mppi_st/Controller_20_Horizon2000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum_force-v3/2020-11-14_14-52-04/inverted_pendulum"
-job_path_pid="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/pid/2020-11-12/control_delta_1/pid_st/Controller_20_Horizon2000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum_force-v3/2020-11-12_20-34-50/inverted_pendulum"
+#job_path_pid="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/pid/2020-11-12/control_delta_1/pid_st/Controller_20_Horizon2000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum_force-v3/2020-11-12_20-34-50/inverted_pendulum"
 
 job_path_rand="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip/2020-11-21/control_delta_1/Controller_rand_Horizon20_Can1000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum-v0/2020-11-21_04-09-40/inverted_pendulum"
 job_path_rand_f1="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip_force/2020-11-21/control_delta_1/Controller_rand_Horizon20_Can1000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum_force-v1/2020-11-21_04-04-04/inverted_pendulum"
 job_path_rand_f2="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip_force/2020-11-21/control_delta_1/Controller_rand_Horizon20_Can1000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum_force-v2/2020-11-21_04-06-54/inverted_pendulum"
 job_path_rand_f3="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip_force/2020-11-21/control_delta_1/Controller_rand_Horizon20_Can1000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum_force-v3/2020-11-21_04-08-11/inverted_pendulum"
-job_path_pid="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/pid/2020-11-12/control_delta_1/pid_st/Controller_20_Horizon2000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum_force-v3/2020-11-12_20-34-50/inverted_pendulum"
+job_path_pid="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/pid/2020-11-10/control_delta_1/pid_st_ac/Controller_20_Horizon500_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum_force-v3/2020-11-10_10-55-42/inverted_pendulum"
 ##############################
 ###palameter ##########
 ##############################
-iter_num=29
+iter_num=10
 control_delta=1
 rewards="rewards_be09_st"
 eei="eei_be09_st"
@@ -38,9 +38,9 @@ COMMENTOUT
 ##########################
 ###10 times evaluation####0 1 2 3 4 5 6 7 8 9
 ##########################
-for running_times in 0 1 2 3 4 5 6 7 8 9
+for running_times in 102 #0 1 2 3 4 5 6 7 8 9
 do
-  if $running_times -lt 0 ; then
+  if test $running_times -gt 10 ; then #-lt 5000 ; then
    ### No torque sensor####
    echo running_times and mpe $running_times
    ### No torque sensor####
@@ -57,7 +57,7 @@ do
    #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f3 --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
    #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand_f3 --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
    ### pid ####
-   #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_pid --running_times $running_times --iter_num $iter_num  --control_delta $control_delta
+   python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_pid --running_times $running_times --iter_num $iter_num  --control_delta $control_delta
   else
     echo running_times $running_times
    #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi --running_times $running_times --iter_num $iter_num  --control_delta $control_delta --use_gpu
@@ -73,7 +73,7 @@ do
    #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand_f3 --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
    ### pid ####
    #python ~/Documents/pddm-master/pddm/scripts/compare_visualize_iteration_graph.py --eval --perturb --save_name compare_mppi_delta_1_sen1 --data_type $rewards --iter_num $running_times --job_path0 $job_path_mppi_f1 --job_path1 $job_path_mppi --job_path2 $job_path_pid --save_dir $job_path_pid
-   #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_pid --running_times $running_times --iter_num $iter_num  --control_delta $control_delta
+   python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_pid --running_times $running_times --iter_num $iter_num  --control_delta $control_delta
   fi
 done
 COMMENTOUT
@@ -81,7 +81,7 @@ COMMENTOUT
 ##simulation result
 ###################
 #python ~/Documents/pddm-master/pddm/scripts/visualize_iteration_graph.py --save_name mmppi_sen1 --iter_num 0 --job_path $job_path_mppi_f1 --save_dir $job_path_pid
-#python ~/Documents/pddm-master/pddm/scripts/visualize_iteration_graph.py --save_name test_mppi --iter_num 0 --job_path $job_path_pid  --save_dir $job_path_pid
+python ~/Documents/pddm-master/pddm/scripts/visualize_iteration_graph.py --save_name test_mppi --iter_num 102 --job_path $job_path_pid  --save_dir $job_path_pid --eval --perturb
 
 for running_times in 0 #1 2 3 4 5 6 7 8 9 10
 do
@@ -148,7 +148,7 @@ python ~/Documents/pddm-master/pddm/statstics_anlysis/box_plot_kai_test.py -j $j
 ##########
 ##loss plot
 ##########
-#python ~/Documents/pddm-master/pddm/statstics_anlysis/losses_plot.py -j $job_path_mppi_f1 $job_path_mppi_f2 $job_path_mppi_f3 $job_path_mppi  --save_dir $job_path_pid  --save_num mppi_delta1_all
+python ~/Documents/pddm-master/pddm/statstics_anlysis/losses_plot.py -j $job_path_mppi_f1 $job_path_mppi_f2 $job_path_mppi_f3 $job_path_mppi  --save_dir $job_path_pid  --save_num mppi_delta1_all
 
 
 << COMMENTOUT

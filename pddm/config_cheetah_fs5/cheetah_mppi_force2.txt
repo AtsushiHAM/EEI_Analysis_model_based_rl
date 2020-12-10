@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+## Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
 #########################
 
 ## env
-'env_name': ['pddm_cheetah-v0'],
+'env_name': ['pddm_cheetah-v2'],
 'rollout_length': [100],
 'num_iters': [70],
 'num_trajectories_per_iter': [30],
@@ -100,3 +100,4 @@
 'mppi_beta': [0.9],
 
 }
+

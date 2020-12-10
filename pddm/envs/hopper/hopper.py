@@ -1,29 +1,65 @@
+# Copyright 2019 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import numpy as np
+import mujoco_py
 from gym import utils
 from gym.envs.mujoco import mujoco_env
-import tensorflow as tf
+
+from pddm.envs.utils.quatmath import quat_to_euler
 import os
 import numpy as np
 
 #GYM_ASSET_PATH2=os.path.join(os.getcwd(),'assets')
 #GYM_ASSET_PATH=os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'assets'))
 GYM_ASSET_PATH = os.path.join(os.path.dirname(__file__), 'assets')
-PI=3.14159265359
+
 
 class HopperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
-    def __init__(self, file_path=os.path.join(GYM_ASSET_PATH, "walker2d.xml"), max_step=1000):
+    def __init__(self,
+                 xml_file=os.path.join(GYM_ASSET_PATH,'hopper.xml'),
+                 ctrl_cost_weight=0.5,
+                 healthy_reward=30.0,
+                 terminate_when_unhealthy=False,
+                 healthy_z_range=(1.0, 1.5),
+                 reset_noise_scale=0.1,
+                 contact_force_range=0,
+                 exclude_current_positions_from_observation=False):
+
         utils.EzPickle.__init__(**locals())
+
         self.time = 0
-        self.num_step = 0
-        self.max_step = max_step  # maximum number of time steps for one episode
-        self.min_z = 1.0
-        self.max_z = 1.5
+
+        self._ctrl_cost_weight = ctrl_cost_weight
+        self._healthy_reward = healthy_reward
+        self._terminate_when_unhealthy = terminate_when_unhealthy
+        self._healthy_z_range = healthy_z_range
+        self.min_z, self.max_z = self._healthy_z_range
+        self._reset_noise_scale = reset_noise_scale
+        self._exclude_current_positions_from_observation = exclude_current_positions_from_observation
 
         self.startup = True
-        mujoco_env.MujocoEnv.__init__(self, os.path.join(file_path), 2)
+        mujoco_env.MujocoEnv.__init__(self, xml_file, 5)#mujoco_env.MujocoEnv.__init__(self, 'ant.xml', 5)
         self.startup = False
-        #utils.EzPickle.__init__(self)
-        self.skip = self.frame_skip  # #maximum number of time steps for one episode
+
+        self.skip = self.frame_skip
+
+        #self.action_space.high 1, self.action_space.low -1
+        #actions are control limited right now (not force limited)
+        #self.model.actuator_gear starts at [150,0,0,0,0,0] for each of the 8 actuators
+        for i in range(len(self.model.actuator_gear)):
+            self.model.actuator_gear[i][0]/=5
 
     def get_reward(self, observations, actions):
 
@@ -34,98 +70,126 @@ class HopperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             actions: (batchsize, ac_dim) or (ac_dim,)
 
         Return:
-            r_total: (batchsize,1) or (1,), reward for that pair
-            done: (batchsize,1) or (1,), True if reaches terminal state
+            r_total: reward for that pair: (batchsize,1) or (1,)
+            done: True if env reaches terminal state: (batchsize,1) or (1,)
         """
 
-        # initialize and reshape as needed, for batch mode
+        #initialize and reshape as needed, for batch mode
         self.reward_dict = {}
-        if len(observations.shape) == 1:
-            observations = np.expand_dims(observations, axis=0)
-            actions = np.expand_dims(actions, axis=0)
+        if len(observations.shape)==1:
+            observations = np.expand_dims(observations, axis = 0)
+            actions = np.expand_dims(actions, axis = 0)
             batch_mode = False
         else:
             batch_mode = True
 
-        # get vars
-        velx= observations[:, 5]
-        #velx = observations[:, 6]
+        #get vars
+        xvel = observations[:, 6]
         height = observations[:, 1]
-        ang= observations[:, 2]
-        s = self.state_vector()
+        roll_angle = observations[:, 0]
+        pitch_angle = observations[:, 1]
 
-        #self._terminate_when_unhealthy = True
-        #self._healthy_z_range = (1.0, 1.5)
+        #is flipped
+        is_flipping = np.zeros((observations.shape[0],))
+        #is_flipping[np.abs(roll_angle) > 0.7] = 1
+        #is_flipping[np.abs(pitch_angle) > 0.6] = 1
 
-        # check health
+        #check health
         all_finite = np.isfinite(observations).all(axis=1)
         is_healthy = np.ones((observations.shape[0],))
-        #is_healthy[all_finite == False] = 0
-        #is_healthy[height < self.min_z] = 0
-        #is_healthy[height > self.max_z] = 0
-        # calc rew
-        self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
-        self.reward_dict['run'] = 10*velx
-        self.reward_dict['health'] = is_healthy
-        #self.reward_dict['height'] = height#np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
-        #self.reward_dict['r_total'] =self.reward_dict['run']-  +0.1*self.reward_dict['actions']-3.0*(self.reward_dict['height']-1.3)**2
-        self.reward_dict['r_total'] = self.reward_dict['run'] # + self.reward_dict['health']
-        # check if done
-        dones = np.zeros((observations.shape[0],))
-        dones[is_healthy == False] = 1
-        #if self._terminate_when_unhealthy:
-            #dones[is_healthy == False] = 1
+        is_healthy[all_finite==False] = 0
+        is_healthy[height < self.min_z] = 0
+        is_healthy[height > self.max_z] = 0
+        is_healthy[is_flipping==True] = 0
 
-        # return
+        #calc rew
+        self.reward_dict['actions'] = -self._ctrl_cost_weight * np.sum(np.square(actions), axis=1)
+        self.reward_dict['run'] = 10*xvel
+        self.reward_dict['health'] = -self._healthy_reward*(height-1.3)**2
+        self.reward_dict['flipping'] = -500*is_flipping
+        self.reward_dict['r_total'] = 50 + self.reward_dict['run'] + self.reward_dict['health'] + self.reward_dict['flipping'] ### + self.reward_dict['actions']
+
+        #check if done
+        dones = np.zeros((observations.shape[0],))
+        if self._terminate_when_unhealthy:
+            dones[is_healthy==False] = 1
+
+        #return
         if not batch_mode:
             return self.reward_dict['r_total'][0], dones[0]
         return self.reward_dict['r_total'], dones
 
     def get_score(self, obs):
-        goal_difference = abs(obs[8]) + abs(obs[9])
-        return goal_difference
+        xvel = obs[-1]
+        return xvel
 
     def step(self, action):
-        self.num_step += 1
 
+        self.prev_com_pos = self.get_body_com("torso").copy()
+
+        #step
         self.do_simulation(action, self.frame_skip)
+
+        #obs/reward/done/score
         ob = self._get_obs()
         rew, done = self.get_reward(ob, action)
         score = self.get_score(ob)
 
-        # return
+        #return
         env_info = {'time': self.time,
                     'obs_dict': self.obs_dict,
                     'rewards': self.reward_dict,
                     'score': score}
         return ob, rew, done, env_info
 
-    def viewer_setup(self):
-        self.viewer.cam.trackbodyid = 0
+    def _get_obs(self):
+
+        #com vel
+        if(self.startup):
+            xvel = [0.0]
+        else:
+            curr_com_pos = self.get_body_com("torso").copy()
+            prev_com_pos = self.prev_com_pos
+            xvel = [(curr_com_pos-prev_com_pos)[0]/self.dt]
+
+        #data.qpos is 15
+            # 3 com pos
+            # 4 com quat
+            # 8 : 4 pairs of hip/ankle (start top R, go ccw)
+
+        self.obs_dict = {}
+        #self.obs_dict['com_angular_pose'] = quat_to_euler(self.sim.data.qpos[3:7]) # 3
+        self.obs_dict['com_pos'] = self.sim.data.qpos[:3]  #.copy() # 3
+        self.obs_dict['joints_pos'] = self.sim.data.qpos[3:].copy() # 15 --> 8
+        self.obs_dict['joints_vel'] = self.sim.data.qvel[:].copy() # 14 --> 8
+        self.obs_dict['com_vel_x'] = xvel.copy() #1
+
+        if self._exclude_current_positions_from_observation:
+            return np.concatenate([
+                self.obs_dict['com_angular_pose'],
+                self.obs_dict['joints_pos'],
+                self.obs_dict['joints_vel'],
+                [self.obs_dict['com_pos'][2]], #only height
+                #self.obs_dict['com_vel_x'],
+            ])
+        else:
+            return np.concatenate([
+                #self.obs_dict['com_angular_pose'],
+                self.obs_dict['com_pos'],  # x y and z
+                self.obs_dict['joints_pos'],
+                self.obs_dict['joints_vel'],
+                #self.obs_dict['com_vel_x'],
+            ])
 
     def reset_model(self):
+
         self.num_step = 0
         # set reset pose/vel
         self.reset_pose = self.init_qpos + self.np_random.uniform(low=-.005, high=.005, size=self.model.nq)
         self.reset_vel = self.init_qvel + self.np_random.uniform(size=self.model.nv, low=-.005, high=.005)
-        #self.set_state(qpos, qvel)
+        # self.set_state(qpos, qvel)
         return self.do_reset(self.reset_pose.copy(), self.reset_vel.copy())
 
-    def _get_obs(self):
-
-        np.clip(self.sim.data.qvel.flat, -10, 10)
-        theta = self.sim.data.qpos.flat[:2]
-        self.obs_dict = {}
-        self.obs_dict['pos'] = self.sim.data.qpos.flat[1:].copy()
-        #self.obs_dict['pos'] = self.sim.data.qpos.flat.copy()
-        self.obs_dict['vel'] = np.clip(self.sim.data.qvel.flat, -10, 10).copy()
-        # self.sim.data.qpos.flat[2:].copy()#self.get_body_com("fingertip") - self.get_body_com("target").copy()
-        #self.obs_dict['goal_vel'] = self.sim.data.qvel.flat[2:].copy()
-        #theta = self.sim.data.qpos.flat[:2]
-        return np.concatenate([
-            self.obs_dict['pos'],
-            self.obs_dict['vel'],##23
-        ])
 
     def do_reset(self, reset_pose, reset_vel, reset_goal=None):
 
@@ -135,3 +199,5 @@ class HopperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         #return
         return self._get_obs()
 
+    def viewer_setup(self):
+        self.viewer.cam.distance = 15

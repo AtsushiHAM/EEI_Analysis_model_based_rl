@@ -8,7 +8,7 @@
   </default>
 
   <size nstack="300000" nuser_geom="1"/>
-  <option gravity="0 0 -9.81" timestep="0.01"/>
+  <option gravity="0 0 -9.81" timestep="0.01" />
 
   <asset>
     <texture builtin="gradient" height="100" rgb1="1 1 1" rgb2="0 0 0" type="skybox" width="100"/>
@@ -34,7 +34,7 @@
             <body name="motor" pos="0 0 6.3">
                 <joint axis="0 0 1"  name="motor" pos="0 0 0" range="-3.14159265359 3.14159265359" type="hinge" limited="false"/>
                 <geom axisangle="0 0 1 0" name="motor" pos="0 0 0" rgba="0.6 0.6 0.6 1" size=".4 0.3" type="capsule" mass="0.5" material="metal"/>
-                <site name="motor" pos="0 0 0" size=".3 .3 .3" type="ellipsoid" rgba="0.3 0.2 0.1 0.3"/>
+                <site name="motor" pos="0 0 0" size=".003 .003 .003" type="ellipsoid" rgba="0.3 0.2 0.1 0.3"/>
                 <body name="arm" pos="4.5 0 0.2">
                     <geom type="box" pos="0 0 0" size="5 0.2 0.2" name="arm" mass="0.1" material="metal"/>
                     <body name="pole" pos="4.8 0 0">

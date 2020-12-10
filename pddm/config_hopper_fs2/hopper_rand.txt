@@ -87,7 +87,7 @@
 
 ## MPC
 'horizon': [20],
-'num_control_samples': [1000],
+'num_control_samples': [4000],
 'controller_type': ['rand'],
 
 ## cem
@@ -96,6 +96,6 @@
 
 ## mppi
 'mppi_kappa': [10],
-'mppi_mag_noise': [0.8],
-'mppi_beta': [0.7],
+'mppi_mag_noise': [0.9],
+'mppi_beta': [0.9],
 }

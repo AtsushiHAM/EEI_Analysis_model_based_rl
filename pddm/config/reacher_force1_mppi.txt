@@ -26,7 +26,7 @@
 #########################
 
 ## env
-'env_name': ['pddm_reacher-v0'],
+'env_name': ['pddm_reacher-v225'],
 'rollout_length': [500],
 'num_iters': [30],
 'num_trajectories_per_iter': [10],

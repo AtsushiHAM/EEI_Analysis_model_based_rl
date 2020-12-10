@@ -18,7 +18,7 @@
 ##### run options
 #########################
 
-'job_name': ['cheetah'],
+'job_name': ['inverted_pendulum'],
 'seed': [0],
 
 #########################
@@ -26,10 +26,10 @@
 #########################
 
 ## env
-'env_name': ['pddm_cheetah-v0'],
-'rollout_length': [100],
-'num_iters': [70],
-'num_trajectories_per_iter': [30],
+'env_name': ['pddm_furuta_inverted_pendulum_force-v11'],
+'rollout_length': [500],
+'num_iters': [30],
+'num_trajectories_per_iter': [10],
 
 ## continue
 'continue_run': [-1],
@@ -52,9 +52,9 @@
 
 ## collect random rollouts
 'load_existing_random_data': [False],
-'num_rand_rollouts_train': [200],
+'num_rand_rollouts_train': [50],
 'num_rand_rollouts_val': [50],
-'rand_rollout_length': [100],
+'rand_rollout_length': [500],
 'use_threading': [True],
 
 ## sample random velocities vs. positions
@@ -87,7 +87,7 @@
 
 ## MPC
 'horizon': [20],
-'num_control_samples': [2000],
+'num_control_samples': [1000],
 'controller_type': ['mppi'],
 
 ## cem
@@ -95,7 +95,7 @@
 'cem_num_elites': [5],
 
 ## mppi
-'mppi_kappa': [1],
+'mppi_kappa': [10],
 'mppi_mag_noise': [0.9],
 'mppi_beta': [0.9],
 

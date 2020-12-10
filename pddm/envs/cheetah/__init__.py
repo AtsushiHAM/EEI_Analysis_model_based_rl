@@ -19,3 +19,15 @@ register(
     entry_point='pddm.envs.cheetah.cheetah:HalfCheetahEnv',
     max_episode_steps=1000,
 )
+
+register(
+    id='pddm_cheetah-v2',
+    entry_point='pddm.envs.cheetah.cheetah:HalfCheetahEnv2',
+    max_episode_steps=1000,
+)
+
+register(
+    id='pddm_cheetah-v6',
+    entry_point='pddm.envs.cheetah.cheetah:HalfCheetahEnv6',
+    max_episode_steps=1000,
+)

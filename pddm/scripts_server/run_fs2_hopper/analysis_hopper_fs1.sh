@@ -8,14 +8,14 @@ eval_iteration="~/Documents/pddm-master/pddm/scripts/eval_iteration.py"
 ##############################
 ###job path ##########
 ##############################
-job_path_mppi="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/hp/2020-11-21/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.9/Iter50_Rollout20_Step100/ensemble3_num2_depth250/pddm_hopper-v0/2020-11-21_00-43-17/hopper"
+job_path_mppi="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/hp/2020-12-07/control_delta_1/Controller_rand_Horizon20_Can1000_beta0.7/Iter50_Rollout20_Step500/ensemble3_num2_depth250/pddm_hopper-v0/2020-12-07_10-38-25/hopper"
 #job_path_rand="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip/2020-11-05/control_delta_1/rand/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum-v0/2020-11-05_13-07-38/inverted_pendulum"
 
 
 ##############################
 ###palameter ##########
 ##############################
-iter_num=49
+iter_num=20
 control_delta=1
 
 
@@ -29,7 +29,7 @@ for running_times in 0 1 2 3 4 5 6 7 8 9 10
 do
   ### No torque sensor####
   python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi --running_times $running_times --iter_num $iter_num --execute_sideRollouts --control_delta $control_delta --use_gpu
-  done
+done
 
 ###################
 ##simulation result

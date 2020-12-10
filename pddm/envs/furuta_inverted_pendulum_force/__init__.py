@@ -27,6 +27,18 @@ register(
 )
 
 register(
+    id='pddm_furuta_inverted_pendulum_force-v11',
+    entry_point='pddm.envs.furuta_inverted_pendulum_force.IP_env:InvertedPendulumEnv1_1',
+    max_episode_steps=1000,
+)
+
+register(
+    id='pddm_furuta_inverted_pendulum_force-v12',
+    entry_point='pddm.envs.furuta_inverted_pendulum_force.IP_env:InvertedPendulumEnv1_2',
+    max_episode_steps=1000,
+)
+
+register(
     id='pddm_furuta_inverted_pendulum_force-v2',
     entry_point='pddm.envs.furuta_inverted_pendulum_force.IP_env:InvertedPendulumEnv2',
     max_episode_steps=1000,

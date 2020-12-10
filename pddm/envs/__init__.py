@@ -23,7 +23,6 @@ import pddm.envs.furuta_inverted_pendulum_force
 import pddm.envs.furuta_inverted_pendulum_force_fs5
 import pddm.envs.cart_pole
 import pddm.envs.cart_double_pole
-import pddm.envs.half_cheetah
 import pddm.envs.reacher
 import pddm.envs.sphere
 import pddm.envs.hopper

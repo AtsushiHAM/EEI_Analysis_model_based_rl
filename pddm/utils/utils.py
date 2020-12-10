@@ -27,16 +27,18 @@ def state_prediction_inverted_pendulum(env,reward_func,resulting_states_list,all
 
         cmap = plt.get_cmap('jet_r')
         # num_sims = 5
-        num_sims = [worst_sim_num, best_sim_num]
+        #num_sims = [worst_sim_num, best_sim_num]
+        num_sims = [best_sim_num]
         list_of_candidate = []
-        list_of_candidate.append("Worst Act:k={}".format(worst_sim_num))
-        list_of_candidate.append("Worst Pred:k={}".format(worst_sim_num))
+        #list_of_candidate.append("Worst Act:k={}".format(worst_sim_num))
+        #list_of_candidate.append("Worst Pred:k={}".format(worst_sim_num))
         list_of_candidate.append("Best Act:k={}".format(best_sim_num))
         list_of_candidate.append("Best Pre:k={}".format(best_sim_num))
         # indices_to_vis = [0, 1, 2, 3, 4, 6, -3, -2]
         if re.findall('I.?P', str(type(env.env.env))):
             #print("What's {}".format(re.findall('I.?P', str(type(env.env.env)))))
-            indices_to_vis = [0, 1, 2, 3, ]  # dimendion of agent env by hamada
+            #indices_to_vis = [0, 1, 2, 3, ]  # dimendion of agent env by hamada
+            indices_to_vis = [0, 1, 2, 3, 4,5,6]
         elif str(
                 type(env.env.env)) == '<class \'pddm.envs.furuta_inverted_pendulum_force.IP_env.InvertedPendulumEnv\'>':
             indices_to_vis = [0, 1, 2, 3, 4]

@@ -27,7 +27,7 @@
 
 ## env
 'env_name': ['pddm_cheetah-v0'],
-'rollout_length': [1000],
+'rollout_length': [100],
 'num_iters': [70],
 'num_trajectories_per_iter': [30],
 
@@ -87,7 +87,7 @@
 
 ## MPC
 'horizon': [20],
-'num_control_samples': [700],
+'num_control_samples': [2000],
 'controller_type': ['rand'],
 
 ## cem
