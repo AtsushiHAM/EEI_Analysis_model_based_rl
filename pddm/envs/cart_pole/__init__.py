@@ -20,3 +20,18 @@ register(
     max_episode_steps=1000,
 )
 
+register(
+    id='pddm_cart_pole-v10',
+    entry_point='pddm.envs.cart_pole.cart_pole:CartPoleEnv1_0',
+    max_episode_steps=1000,
+)
+register(
+    id='pddm_cart_pole-v14',
+    entry_point='pddm.envs.cart_pole.cart_pole:CartPoleEnv1_4',
+    max_episode_steps=1000,
+)
+register(
+    id='pddm_cart_pole-v214',
+    entry_point='pddm.envs.cart_pole.cart_pole:CartPoleEnv2',
+    max_episode_steps=1000,
+)

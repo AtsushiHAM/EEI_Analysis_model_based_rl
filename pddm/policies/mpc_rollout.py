@@ -27,8 +27,11 @@ from pddm.utils.utils import get_actual_EEI_reacher
 from pddm.utils.utils import get_actual_EEI_kai
 from pddm.classic_pollicy.pid_policy import PID_Policy
 from pddm.classic_pollicy.reacher_pid import  Reacher_PID
+from pddm.classic_pollicy.vreacher_pid import  VReacher_PID
+from pddm.classic_pollicy.cp_pid_policy import  CP_PID_Policy
 import os
 from pddm.utils.helper_funcs import render_env
+import re
 
 
 class MPCRollout:
@@ -93,20 +96,37 @@ class MPCRollout:
             self.use_ground_truth_dynamics,
             execute_sideRollouts, plot_sideRollouts, params, save_dir, iter)
 
+        self.controller_vreacer_pid = VReacher_PID(
+            self.env, self.dyn_models, self.reward_func, rand_policy,
+            self.use_ground_truth_dynamics,
+            execute_sideRollouts, plot_sideRollouts, params, save_dir, iter)
+
+        self.controller_cp_pid = CP_PID_Policy(
+            self.env, self.dyn_models, self.reward_func, rand_policy,
+            self.use_ground_truth_dynamics,
+            execute_sideRollouts, plot_sideRollouts, params, save_dir, iter,control_delta)
+
         self._perturb = True
         if plot_sideRollouts:
             #self._purturb_data = np.load(os.getcwd() + "/eval_perterb.npy").reshape([100, 30])
             if sim_ver == "inverted_pendulum":
                 self._purturb_data = np.full([100,30],30)
+            elif sim_ver == "cart_pole":
+                self._purturb_data = np.full([100, 30], 150)
+
 
         else:
             if sim_ver == "inverted_pendulum":
-                file_name="/perterb.npy"
+                file_name="/perterb2999_3001.npy"
                 self._purturb_data = np.load(os.getcwd() + file_name ).reshape([100, 30])
+                #self._purturb_data = np.full([100, 30], 0)
                 print("file name {}".format(file_name))
-                #file = open(save_dir+'/perteb.txt', 'w')
-                #file.write(file_name)
-                #file.close()
+            elif sim_ver == "cart_pole":
+                file_name = "/perterb140160.npy"
+                #self._purturb_data = np.load(os.getcwd() + file_name).reshape([100, 30])
+                self._purturb_data = np.full([100, 30], 0)
+                print("file name {}".format(file_name))
+
         self._sim_ver = sim_ver
         self._control_delta = control_delta
         print('hello')
@@ -162,6 +182,10 @@ class MPCRollout:
 
         elif controller_type == 'reacher_pid':
             get_action = self.controller_reacer_pid.get_action
+        elif controller_type == 'vreacher_pid':
+            get_action = self.controller_vreacer_pid.get_action
+        elif controller_type == 'cp_pid':
+            get_action = self.controller_cp_pid.get_action
 
 
         #######################################
@@ -206,7 +230,7 @@ class MPCRollout:
         for z in range(self.K - 1):
 
             ###added by Hamada#
-            if self._sim_ver == "inverted_pendulum":
+            if self._sim_ver == "inverted_pendulum" or self._sim_ver == "cart_pole":
                 if step % 100 == 0:
                     if self._perturb:
                         perturb = True
@@ -223,7 +247,7 @@ class MPCRollout:
             curr_state, rew, _, env_info = self.env.step(zero_ac)
 
             #######added by Hamada
-            if self._sim_ver == "inverted_pendulum":
+            if self._sim_ver == "inverted_pendulum" or self._sim_ver == "cart_pole":
                 if self._perturb:
                     self.env.env.env.remove_all_perturbation()
                     # self.env.env.env.update_adversary(0)
@@ -263,7 +287,7 @@ class MPCRollout:
 
 
             ###added by Hamada#
-            if  self._sim_ver == "inverted_pendulum":
+            if  self._sim_ver == "inverted_pendulum" or self._sim_ver == "cart_pole":
                 if step % 500 == 0:
                     if self._perturb:
                         perturb = True
@@ -434,7 +458,7 @@ class MPCRollout:
             step += 1
 
             #######added by Hamada
-            if self._sim_ver == "inverted_pendulum":
+            if self._sim_ver == "inverted_pendulum" or self._sim_ver == "cart_pole":
                 if self._perturb:
                     self.env.env.env.remove_all_perturbation()
                     # self.env.env.env.perturb_joint(noise)

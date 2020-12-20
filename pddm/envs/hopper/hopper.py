@@ -50,7 +50,7 @@ class HopperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         self._exclude_current_positions_from_observation = exclude_current_positions_from_observation
 
         self.startup = True
-        mujoco_env.MujocoEnv.__init__(self, xml_file, 5)#mujoco_env.MujocoEnv.__init__(self, 'ant.xml', 5)
+        mujoco_env.MujocoEnv.__init__(self, xml_file, 1)#mujoco_env.MujocoEnv.__init__(self, 'ant.xml', 5)
         self.startup = False
 
         self.skip = self.frame_skip
@@ -86,8 +86,8 @@ class HopperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         #get vars
         xvel = observations[:, 6]
         height = observations[:, 1]
-        roll_angle = observations[:, 0]
-        pitch_angle = observations[:, 1]
+        body_angle = observations[:, 2]
+        #pitch_angle = observations[:, 1]
 
         #is flipped
         is_flipping = np.zeros((observations.shape[0],))
@@ -105,14 +105,14 @@ class HopperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         #calc rew
         self.reward_dict['actions'] = -self._ctrl_cost_weight * np.sum(np.square(actions), axis=1)
         self.reward_dict['run'] = 10*xvel
-        self.reward_dict['health'] = -self._healthy_reward*(height-1.3)**2
-        self.reward_dict['flipping'] = -500*is_flipping
-        self.reward_dict['r_total'] = 50 + self.reward_dict['run'] + self.reward_dict['health'] + self.reward_dict['flipping'] ### + self.reward_dict['actions']
+        self.reward_dict['health'] = -10*(height-1.3)**2
+        self.reward_dict['angle_penaly'] = - 50* np.abs(body_angle)
+        self.reward_dict['r_total'] = 10+ self.reward_dict['run'] + self.reward_dict['health'] + self.reward_dict['angle_penaly'] ### + self.reward_dict['actions']
 
         #check if done
+        # check if done
         dones = np.zeros((observations.shape[0],))
-        if self._terminate_when_unhealthy:
-            dones[is_healthy==False] = 1
+        dones[body_angle > 1.0] = 1
 
         #return
         if not batch_mode:
@@ -120,8 +120,8 @@ class HopperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         return self.reward_dict['r_total'], dones
 
     def get_score(self, obs):
-        xvel = obs[-1]
-        return xvel
+        xposafter = obs[0]
+        return xposafter
 
     def step(self, action):
 

@@ -39,6 +39,7 @@
                     <geom type="box" pos="0 0 0" size="5 0.2 0.2" name="arm" mass="0.1" material="metal"/>
                     <body name="pole" pos="4.8 0 0">
                      <joint axis="1 0 0" damping="0.01" name="pole" pos="0 0 0" range="-6.28318530718 6.28318530718" type="hinge" frictionloss='0.' limited="false"/>
+                        <site name="pole" pos="0 0 0" size=".003 .003 .003" type="ellipsoid" rgba="0.3 0.2 0.1 0.3"/>
                      <!--<joint axis="1 0 0" damping="1.25" name="pole" pos="0 0 4" range="-6.28318530718 6.28318530718" type="hinge" frictionloss='0.' limited="false"/>-->
                      <!--<joint axis="1 0 0" damping=".01" name="pole" pos="0 0 4" range="-1.5707963267949 1.5707963267949" type="hinge" frictionloss='0.' />-->
                      <geom axisangle="1 0 0 0" name="pole" pos="0 0 4" size=".2 4" type="capsule" mass="0.05" />-->
@@ -53,6 +54,7 @@
      <!--<motor gear="4.2" joint="motor" name="motor" ctrllimited="true" />-->
   </actuator>
   <sensor>
-    <torque site="motor" name="torque_sensor"/>
+   <torque site="motor" name="torque_sensor"/>-->
+      <torque site="pole" name="torque_sensor1"/>-->
   </sensor>
 </mujoco>

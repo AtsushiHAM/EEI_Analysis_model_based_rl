@@ -76,6 +76,8 @@ def vis_iter_graph(args, load_dir0):
         agent_type="ip"
     elif re.findall('r.?a',env_name0):
         agent_type = "re"
+    elif re.findall('c.?h',env_name0):
+        agent_type = "hc"
     iter_num ="iter"+str(args.iter_num)
     print("env name {}".format(re.findall('r.?a',env_name0)))
     for vis_index in range(len(rollouts_info0)):
@@ -93,6 +95,8 @@ def vis_iter_graph(args, load_dir0):
         elif agent_type=="re":
             #state_index = [0, 1, 2, 3,4,5,6,7,8,9]
             state_index =[4,5,6,7,8,9 ]
+        elif agent_type == "hc":
+            state_index = [4, 5, 6, 7, 8, 9]
 
         fig = plt.figure()
         until_where = 200

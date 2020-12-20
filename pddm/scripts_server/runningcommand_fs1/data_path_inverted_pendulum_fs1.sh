@@ -137,3 +137,25 @@ job_path_mppi_f2="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip_force/
 job_path_mppi_f3="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip_force/2020-11-18/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum_force-v3/2020-11-18_17-42-09/inverted_pendulum"
 #job_path_rand_f3="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip_force/2020-11-14/control_delta_1/mppi_st/Controller_20_Horizon2000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum_force-v3/2020-11-14_14-52-04/inverted_pendulum"
 job_path_pid="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/pid/2020-11-12/control_delta_1/pid_st/Controller_20_Horizon2000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum_force-v3/2020-11-12_20-34-50/inverted_pendulum"
+
+
+##############################
+###job path ########## 1214 petrub 20-40
+##############################
+job_path_mppi="/data/atsushi_data/output/ip/2020-12-15/control_delta_1/Controller_mppi_Horizon20_Can4000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum-v0/2020-12-15_15-00-35/inverted_pendulum"
+#job_path_rand="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip/2020-11-05/control_delta_1/rand/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum-v0/2020-11-05_13-07-38/inverted_pendulum"
+job_path_mppi_f1="/data/atsushi_data/output/ip_force/2020-12-15/control_delta_1/Controller_mppi_Horizon20_Can4000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum_force-v1/2020-12-15_15-01-14/inverted_pendulum"
+job_path_mppi_f11="/data/atsushi_data/output/ip_force/2020-12-15/control_delta_1/Controller_mppi_Horizon20_Can4000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum_force-v11/2020-12-15_15-01-51/inverted_pendulum"
+job_path_mppi_f12="/data/atsushi_data/output/ip_force/2020-12-15/control_delta_1/Controller_mppi_Horizon20_Can4000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum_force-v12/2020-12-15_15-02-12/inverted_pendulum"
+job_path_pid="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/pid/2020-11-12/control_delta_1/pid_st/Controller_20_Horizon2000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum_force-v3/2020-11-12_20-34-50/inverted_pendulum"
+
+
+##############################
+###job path ########## 1214 petrub 20-40 same
+##############################
+job_path_mppi="/data/atsushi_data/output/ip/2020-12-17/control_delta_1/Controller_mppi_Horizon20_Can4000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum-v0/2020-12-17_12-20-08/inverted_pendulum"
+#job_path_rand="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip/2020-11-05/control_delta_1/rand/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum-v0/2020-11-05_13-07-38/inverted_pendulum"
+job_path_mppi_f1="/data/atsushi_data/output/ip_force/2020-12-17/control_delta_1/Controller_mppi_Horizon20_Can4000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum_force-v1/2020-12-17_12-21-59/inverted_pendulum"
+job_path_mppi_f11="/data/atsushi_data/output/ip_force/2020-12-17/control_delta_1/Controller_mppi_Horizon20_Can4000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum_force-v11/2020-12-17_12-23-06/inverted_pendulum"
+job_path_mppi_f12="/data/atsushi_data/output/ip_force/2020-12-17/control_delta_1/Controller_mppi_Horizon20_Can4000_beta0.9/Iter30_Rollout10_Step500/ensemble3_num2_depth250/pddm_furuta_inverted_pendulum_force-v12/2020-12-17_12-24-20/inverted_pendulum"
+job_path_pid="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/pid/2020-11-12/control_delta_1/pid_st/Controller_20_Horizon2000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum_force-v3/2020-11-12_20-34-50/inverted_pendulum"

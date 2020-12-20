@@ -46,8 +46,8 @@ def main():
     else:
         args.labels = ['']*len(jobs)
         """
-    start=0
-    end=10
+    start=3
+    end=30
     # Scan jobs and plot
     colors=['b','r', 'g',  'k', 'c', 'm', 'pink', 'purple']
     all_data=[]
@@ -119,7 +119,7 @@ def main():
     ax.set_xlabel('controller')
     if args.data_type == "eei":
         ax.set_ylabel('EEI')
-        plt.ylim([0, 0.005])
+        #plt.ylim([-0.0005, 0.002])
     elif args.data_type == "rewards":
         ax.set_ylabel('Rewards')
     elif args.data_type == "ene":

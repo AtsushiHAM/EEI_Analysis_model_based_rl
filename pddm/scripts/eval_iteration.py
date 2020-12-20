@@ -33,7 +33,7 @@ import pddm.envs
 
 ###added ny hamada
 import re
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 def run_eval(args, save_dir):
 
@@ -89,6 +89,8 @@ def run_eval(args, save_dir):
         sim_ver = "inverted_pendulum"
     elif re.findall('R.?e', str(type(env.env.env))):
         sim_ver = "reacher"
+    elif re.findall('C.?a', str(type(env.env.env))):
+        sim_ver = "cart_pole"
     else:
         sim_ver ="hello"
 

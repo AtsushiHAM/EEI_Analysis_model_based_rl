@@ -49,3 +49,15 @@ register(
     entry_point='pddm.envs.furuta_inverted_pendulum_force.IP_env:InvertedPendulumEnv3',
     max_episode_steps=1000,
 )
+
+register(
+    id='pddm_furuta_inverted_pendulum_force-v5',
+    entry_point='pddm.envs.furuta_inverted_pendulum_force.IP_env:InvertedPendulumEnv5',
+    max_episode_steps=1000,
+)
+
+register(
+    id='pddm_furuta_inverted_pendulum_force-v3124',
+    entry_point='pddm.envs.furuta_inverted_pendulum_force.IP_env:InvertedPendulumEnv3_124',
+    max_episode_steps=1000,
+)

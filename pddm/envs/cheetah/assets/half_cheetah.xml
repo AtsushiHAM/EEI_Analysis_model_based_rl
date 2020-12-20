@@ -102,9 +102,9 @@
   <sensor>
     <torque site="joint0" name="torque_sensor0"/>
     <torque site="joint1" name="torque_sensor1"/>
-    <torque site="joint0" name="torque_sensor2"/>
-    <torque site="joint1" name="torque_sensor3"/>
-    <torque site="joint0" name="torque_sensor4"/>
-    <torque site="joint1" name="torque_sensor5"/>
+    <torque site="joint2" name="torque_sensor2"/>
+    <torque site="joint3" name="torque_sensor3"/>
+    <torque site="joint4" name="torque_sensor4"/>
+    <torque site="joint5" name="torque_sensor5"/>
   </sensor>
 </mujoco>

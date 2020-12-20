@@ -17,10 +17,10 @@ import re
 import os
 import time
 #hamada added
-from pylab import rcParams
-rcParams['figure.figsize'] = 10,10
-plt.rcParams["font.size"] = 45
-plt.rcParams["lines.linewidth"]= 10
+#from pylab import rcParams
+#rcParams['figure.figsize'] = 10,10
+#plt.rcParams["font.size"] = 45
+#plt.rcParams["lines.linewidth"]= 10
 
 def state_prediction_inverted_pendulum(env,reward_func,resulting_states_list,all_samples,starting_fullenvstate,actions_taken_so_far,
                                        save_dir,plot_sideRollouts,best_sim_num,worst_sim_num,iter,rollout_num,step_number):

@@ -56,7 +56,8 @@ class Reacher_PID(object):
         self._save_dir = save_dir
 
         ###param for PID by Hamada
-        self.pid = PID(P=200., I=0., D=0.5, delta_time=self.env.env.env.dt, target_pos=0.)
+        self.pid = PID(P=120., I=0., D=0.5, delta_time=self.env.env.env.dt, target_pos=0.)
+        #self.pid = PID(P=200., I=0., D=0.5, delta_time=self.env.env.env.dt, target_pos=0.)
 
     def get_action(self, step_number, curr_state_K, actions_taken_so_far,
                    starting_fullenvstate, evaluating, take_exploratory_actions,iter,rollout_num):

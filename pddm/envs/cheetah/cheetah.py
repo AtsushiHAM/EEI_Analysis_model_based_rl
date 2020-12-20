@@ -27,6 +27,7 @@ class HalfCheetahEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self,file_path=os.path.join(GYM_ASSET_PATH,'half_cheetah.xml'),max_step=1000):
 
         self.time = 0
+        self.slicepoint=0
 
         mujoco_env.MujocoEnv.__init__(self, file_path, 5)
         utils.EzPickle.__init__(self)
@@ -55,14 +56,22 @@ class HalfCheetahEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         else:
             batch_mode = True
 
-        #get vars
+        # get vars
         xvel = observations[:, 9]
         body_angle = observations[:, 2]
+        #bthigh =observations[:, 3]
+        #fthigh = observations[:, 6]
+
+        #goal vel
+        goal_vel = 4.0
 
         #calc rew
         self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        self.reward_dict['run'] = xvel
-        self.reward_dict['r_total'] = self.reward_dict['actions'] + self.reward_dict['run']
+        self.reward_dict['run'] = goal_vel - np.abs(xvel - goal_vel)
+        self.reward_dict['body_angle_pena']=-20.0 * np.abs(body_angle)
+        self.reward_dict['xvel'] = xvel
+        #self.reward_dict['r_total'] = self.reward_dict['run']  + self.reward_dict['actions']+self.reward_dict['body_angle_pena']
+        self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['actions']
 
         #check if done
         dones = np.zeros((observations.shape[0],))
@@ -138,6 +147,7 @@ class HalfCheetahEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self, file_path=os.path.join(GYM_ASSET_PATH, 'half_cheetah.xml'), max_step=1000):
 
         self.time = 0
+        self.slicepoint=0
 
         mujoco_env.MujocoEnv.__init__(self, file_path, 5)
         utils.EzPickle.__init__(self)
@@ -170,10 +180,18 @@ class HalfCheetahEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
         xvel = observations[:, 9]
         body_angle = observations[:, 2]
 
-        # calc rew
+
+        #goal vel
+        goal_vel = 4.0
+
+        #calc rew
         self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        self.reward_dict['run'] = xvel
-        self.reward_dict['r_total'] = self.reward_dict['actions'] + self.reward_dict['run']
+        self.reward_dict['run'] = goal_vel - np.abs(xvel - goal_vel)
+        self.reward_dict['body_angle_pena']=-20.0 * np.abs(body_angle)
+        self.reward_dict['xvel'] = xvel
+        #self.reward_dict['r_total'] = self.reward_dict['run']  + self.reward_dict['actions']+self.reward_dict['body_angle_pena']
+        self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['actions']
+
 
         # check if done
         dones = np.zeros((observations.shape[0],))
@@ -246,6 +264,7 @@ class HalfCheetahEnv6(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self,file_path=os.path.join(GYM_ASSET_PATH,'half_cheetah.xml'),max_step=1000):
 
         self.time = 0
+        self.slicepoint=0
 
         mujoco_env.MujocoEnv.__init__(self, file_path, 5)
         utils.EzPickle.__init__(self)
@@ -274,14 +293,20 @@ class HalfCheetahEnv6(mujoco_env.MujocoEnv, utils.EzPickle):
         else:
             batch_mode = True
 
-        #get vars
+        # get vars
         xvel = observations[:, 9]
         body_angle = observations[:, 2]
 
-        #calc rew
+        # goal vel
+        goal_vel = 4.0
+
+        # calc rew
         self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        self.reward_dict['run'] = xvel
-        self.reward_dict['r_total'] = self.reward_dict['actions'] + self.reward_dict['run']
+        self.reward_dict['run'] = goal_vel - np.abs(xvel - goal_vel)
+        self.reward_dict['body_angle_pena'] = -20.0 * np.abs(body_angle)
+        self.reward_dict['xvel'] = xvel
+        #self.reward_dict['r_total'] = self.reward_dict['run']  + self.reward_dict['actions']+self.reward_dict['body_angle_pena']
+        self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['actions']
 
         #check if done
         dones = np.zeros((observations.shape[0],))
