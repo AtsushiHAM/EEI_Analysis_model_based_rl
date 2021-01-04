@@ -29,6 +29,8 @@ from pddm.classic_pollicy.pid_policy import PID_Policy
 from pddm.classic_pollicy.reacher_pid import  Reacher_PID
 from pddm.classic_pollicy.vreacher_pid import  VReacher_PID
 from pddm.classic_pollicy.cp_pid_policy import  CP_PID_Policy
+from pddm.policies.step_experiment import Step_Experiment
+from pddm.policies.step_experiment_hc import Step_Experiment_HC
 import os
 from pddm.utils.helper_funcs import render_env
 import re
@@ -65,11 +67,12 @@ class MPCRollout:
         self.dt_from_xml = params.dt_from_xml
         self.noise_amount = 0.005
         print("eval {} and noise{}".format(self.evaluating,self.noise_actions))
+
         #hamada modified
         if reward_type=="st":
             self.reward_func = env.unwrapped_env.get_reward
         else:
-            self.reward_func = env.unwrapped_env.get_reward1
+            self.reward_func = env.unwrapped_env.get_reward
 
         #init controllers
         self.controller_randshooting = RandomShooting(
@@ -105,6 +108,21 @@ class MPCRollout:
             self.env, self.dyn_models, self.reward_func, rand_policy,
             self.use_ground_truth_dynamics,
             execute_sideRollouts, plot_sideRollouts, params, save_dir, iter,control_delta)
+
+        self.controller_step_experiment = Step_Experiment(
+                                self.env, self.dyn_models, self.reward_func, rand_policy,
+                                self.use_ground_truth_dynamics,
+                                execute_sideRollouts, plot_sideRollouts, params,save_dir,iter,sim_ver,control_delta)
+
+        self.controller_step_experiment = Step_Experiment(
+            self.env, self.dyn_models, self.reward_func, rand_policy,
+            self.use_ground_truth_dynamics,
+            execute_sideRollouts, plot_sideRollouts, params, save_dir, iter, sim_ver, control_delta)
+
+        self.controller_step_experiment_hc = Step_Experiment_HC(
+            self.env, self.dyn_models, self.reward_func, rand_policy,
+            self.use_ground_truth_dynamics,
+            execute_sideRollouts, plot_sideRollouts, params, save_dir, iter, sim_ver, control_delta)
 
         self._perturb = True
         if plot_sideRollouts:
@@ -157,6 +175,8 @@ class MPCRollout:
         Returns:
             rollout_info: saving all info relevant to this rollout
         """
+        print("gravity {}".format(self.env.env.env.model.opt.gravity))
+        print("mass {}".format(self.env.env.env.model.body_mass))
 
         rollout_start = time.time()
 
@@ -168,7 +188,7 @@ class MPCRollout:
         #######################################
         #### select controller type
         #######################################
-
+        #controller_type='step_experiment'
         if controller_type=='rand':
             get_action = self.controller_randshooting.get_action
         elif controller_type=='cem':
@@ -186,6 +206,12 @@ class MPCRollout:
             get_action = self.controller_vreacer_pid.get_action
         elif controller_type == 'cp_pid':
             get_action = self.controller_cp_pid.get_action
+        elif controller_type == 'step_experiment':
+            get_action = self.controller_step_experiment.get_action
+            print("controller type {}".format(controller_type))
+        elif controller_type == 'step_experiment_hc':
+            get_action = self.controller_step_experiment_hc.get_action
+            print("controller type {}".format(controller_type))
 
 
         #######################################
@@ -228,31 +254,9 @@ class MPCRollout:
 
         #take (K-1) steps of action 0
         for z in range(self.K - 1):
-
-            ###added by Hamada#
-            if self._sim_ver == "inverted_pendulum" or self._sim_ver == "cart_pole":
-                if step % 100 == 0:
-                    if self._perturb:
-                        perturb = True
-                        noise = np.random.uniform(-1, 1)
-                        print("add noise heyhey {}".format(noise))
-                        self.env.env.env.perturb_joint(noise)
-                        #self.env.env.env.update_adversary(noise)
-
-
-
             # take step of action 0
 
-
             curr_state, rew, _, env_info = self.env.step(zero_ac)
-
-            #######added by Hamada
-            if self._sim_ver == "inverted_pendulum" or self._sim_ver == "cart_pole":
-                if self._perturb:
-                    self.env.env.env.remove_all_perturbation()
-                    # self.env.env.env.update_adversary(0)
-                    print("remove noise heyho")
-                    perturb = False
 
             step += 1
 
@@ -280,6 +284,7 @@ class MPCRollout:
         #######################################
 
         done = False
+        print("step{}".format(step))
         while not(done or step>=self.rollout_length):
 
             if self.use_ground_truth_dynamics:
@@ -288,7 +293,7 @@ class MPCRollout:
 
             ###added by Hamada#
             if  self._sim_ver == "inverted_pendulum" or self._sim_ver == "cart_pole":
-                if step % 500 == 0:
+                if step % 500 == 100 :
                     if self._perturb:
                         perturb = True
                         #noise = np.random.uniform(-10,10)
@@ -328,6 +333,8 @@ class MPCRollout:
                         self.evaluating, take_exploratory_actions, iter, rollout_num)
 
                 else:
+                    #print("hey step {}".format(step))
+                    #print("{}".format(controller_type))
                     best_action, predicted_states_list = get_action(
                         step, curr_state_K, actions_taken, starting_fullenvstate,
                         self.evaluating, take_exploratory_actions, iter, rollout_num)
@@ -352,7 +359,7 @@ class MPCRollout:
             ########################
             #print("action {} at {}".format(action_to_take, step))
             next_state, rew, done, env_info = self.env.step(action_to_take)
-            render_env(self.env)
+            #render_env(self.env)
             #################################################
             #### get predicted next_state
             ########## use it to calculate model prediction error (mpe)
@@ -523,6 +530,7 @@ class MPCRollout:
                 actions_K=actions_taken_K,
                 env_infos=env_infos,
                 dt_from_xml=self.dt_from_xml,
+                gravities=self.env.env.env.model.opt.gravity
             )
 
 

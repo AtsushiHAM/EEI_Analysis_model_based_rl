@@ -62,6 +62,7 @@ class Dyn_Model:
 
         ## define forward pass
         self.define_forward_pass()
+        print("hello")
 
 
     def create_placeholders(self):

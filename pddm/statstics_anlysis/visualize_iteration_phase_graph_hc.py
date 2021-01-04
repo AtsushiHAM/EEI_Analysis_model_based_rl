@@ -83,7 +83,7 @@ def vis_iter_graph(args, load_dir):
             plt.subplot(2, 3, k + 1)
             plt.plot(states[:, 3 + k], states[:, 3 + 5 + k], color=cm[10], zorder=1, markersize=200)
             plt.scatter(x=states[:, 3 + k], y=states[:, 3 + 5 + k], s=400, c=cm, zorder=2)
-            plt.ylabel("Ang velocity{}".format(3 + 9 + k))
+            plt.ylabel("Ang velocity{}".format(3 + 5 + k))
             plt.xlabel("Ang{}".format(3 + k))
             plt.subplots_adjust(right=0.7)
 

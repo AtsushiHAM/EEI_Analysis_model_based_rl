@@ -70,8 +70,42 @@ def run_eval(args, save_dir):
     loader = Loader(save_dir)
 
     #env, rand policy
+    #params.env_name='pddm_vreacher-v0'
     env, dt_from_xml = create_env(params.env_name)
     random_policy = Policy_Random(env.env)
+
+    if args.use_different_env:
+        if params.env_name == "pddm_vreacher-v0":
+            different_env, dt_from_xml = create_env('pddm_vreacher_ngr-v0')
+            random_policy_diff = Policy_Random(different_env.env)
+        elif params.env_name == "pddm_vreacher-v11":
+            different_env, dt_from_xml = create_env('pddm_vreacher_ngr-v11')
+            random_policy_diff = Policy_Random(different_env.env)
+        elif params.env_name == "pddm_vreacher-v14":
+            different_env, dt_from_xml = create_env('pddm_vreacher_ngr-v14')
+            random_policy_diff = Policy_Random(different_env.env)
+        elif params.env_name == "pddm_vreacher-v214":
+            different_env, dt_from_xml = create_env('pddm_vreacher_ngr-v214')
+            random_policy_diff = Policy_Random(different_env.env)
+        elif params.env_name == "pddm_vreacher_ngr-v214":
+            different_env, dt_from_xml = create_env('pddm_vreacher-v214')
+            random_policy_diff = Policy_Random(different_env.env)
+        elif params.env_name == "pddm_cheetah-v0":
+            different_env, dt_from_xml = create_env('pddm_cheetah_cgr-v0')
+            random_policy_diff = Policy_Random(different_env.env)
+        elif params.env_name == "pddm_cheetah-v2":
+            different_env, dt_from_xml = create_env('pddm_cheetah_cgr-v2')
+            random_policy_diff = Policy_Random(different_env.env)
+        elif params.env_name == "pddm_cheetah-v6":
+            different_env, dt_from_xml = create_env('pddm_cheetah_cgr-v6')
+            random_policy_diff = Policy_Random(different_env.env)
+        elif params.env_name == "pddm_cheetah_pre-v2":
+            different_env, dt_from_xml = create_env('pddm_cheetah_pre_cgr-v2')
+            random_policy_diff = Policy_Random(different_env.env)
+        elif params.env_name == "pddm_v4reacher-v4":
+            different_env, dt_from_xml = create_env('pddm_v4reacher_ngr-v4')
+            random_policy_diff = Policy_Random(different_env.env)
+
 
     ##hamada added
     ### set seeds
@@ -122,6 +156,19 @@ def run_eval(args, save_dir):
              args.control_delta,
             args.reward_type)
 
+        if args.use_different_env:
+            mpc_rollout_diff = MPCRollout(
+                different_env,
+                dyn_models,
+                random_policy_diff,
+                args.execute_sideRollouts,
+                True,
+                params,
+                save_dir, args.iter_num,
+                sim_ver,
+                args.control_delta,
+                args.reward_type)
+
         ##############################################
         ### restore the saved dynamics model
         ##############################################
@@ -148,6 +195,11 @@ def run_eval(args, save_dir):
             list_eeis=[]
             list_ERss=[]
             list_ENEss=[]
+        if args.use_different_env:
+            list_rewards_diff = []
+            list_scores_diff = []
+            rollouts_diff = []
+
 
         for rollout_num in range(args.num_eval_rollouts):
 
@@ -159,6 +211,7 @@ def run_eval(args, save_dir):
                 print("\n############# Performing MPC rollout #", rollout_num)
 
             mpc_rollout.rollout_length = args.eval_run_length
+            print("statrt state{}".format(starting_state))
             rollout_info = mpc_rollout.perform_rollout(
                 starting_state,
                 starting_observation,
@@ -166,6 +219,15 @@ def run_eval(args, save_dir):
                 rollout_num,  # by Hamada
                 controller_type=params.controller_type,
                 take_exploratory_actions=False)
+            if args.use_different_env:
+                print("statrt state{}".format(starting_state))
+                rollout_info_diff = mpc_rollout_diff.perform_rollout(
+                    starting_state,
+                    starting_observation,
+                    args.iter_num,  # added by Hamada
+                    rollout_num,  # by Hamada
+                    controller_type=params.controller_type,
+                    take_exploratory_actions=False)
 
             #save info from MPC rollout
             list_rewards.append(rollout_info['rollout_rewardTotal'])
@@ -175,6 +237,10 @@ def run_eval(args, save_dir):
                 list_ERss.append(rollout_info['Final_ER'])
                 list_ENEss.append(rollout_info['Final_ENE'])
             rollouts.append(rollout_info)
+            if args.use_different_env:
+                list_rewards_diff.append(rollout_info_diff['rollout_rewardTotal'])
+                list_scores_diff.append(rollout_info_diff['rollout_meanFinalScore'])
+                rollouts.append(rollout_info_diff)
 
         #save all eval rollouts
         pickle.dump(
@@ -190,6 +256,9 @@ def run_eval(args, save_dir):
             np.save(save_dir + "/eval_eeis_{}.npy".format(args.running_times), np.array(list_eeis))
             np.save(save_dir + "/eval_ers_{}.npy".format(args.running_times), np.array(list_ERss))
             np.save(save_dir + "/eval_enes_{}.npy".format(args.running_times), np.array(list_ENEss))
+        if args.use_different_env:
+            np.save(save_dir + "/eval_rewards_{}.npy".format(args.running_times), np.array(list_rewards_diff))
+
 
 
 def main():
@@ -213,6 +282,7 @@ def main():
     parser.add_argument('--running_times', type=int, default=0)
     parser.add_argument('--control_delta', type=int, default=1)
     parser.add_argument('--reward_type', type=str, default='st')
+    parser.add_argument('--use_different_env', action="store_true")
     args = parser.parse_args()
 
     #directory to load from

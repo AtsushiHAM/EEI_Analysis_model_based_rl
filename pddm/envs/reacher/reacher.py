@@ -73,9 +73,9 @@ class ReacherEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         self.num_step += 1
 
         self.do_simulation(action, self.frame_skip)
-        if self.num_step <=  100 or self.num_step > 200 and self.num_step <= 300 or self.num_step > 400 and self.num_step <= 500:
+        if  self.num_step %80<40 :
             self.switch_timing=0
-        elif self.num_step >  100 and self.num_step <=  200 or self.num_step <= 400 and self.num_step > 300 :
+        elif  self.num_step %80>=40 :
             self.switch_timing=1
         else :
             self.switch_timing = 0
@@ -207,11 +207,11 @@ class ReacherEnv1_2(mujoco_env.MujocoEnv, utils.EzPickle):
         self.num_step += 1
 
         self.do_simulation(action, self.frame_skip)
-        if self.num_step <=  100 or self.num_step > 200 and self.num_step <= 300 or self.num_step > 400 and self.num_step <= 500:
-            self.switch_timing=0
-        elif self.num_step >  100 and self.num_step <=  200 or self.num_step <= 400 and self.num_step > 300 :
-            self.switch_timing=1
-        else :
+        if self.num_step % 80 < 40:
+            self.switch_timing = 0
+        elif self.num_step % 80 >= 40:
+            self.switch_timing = 1
+        else:
             self.switch_timing = 0
         ob = self._get_obs()
         rew, done = self.get_reward(ob, action)
@@ -345,11 +345,11 @@ class ReacherEnv1_5(mujoco_env.MujocoEnv, utils.EzPickle):
         self.num_step += 1
 
         self.do_simulation(action, self.frame_skip)
-        if self.num_step <=  100 or self.num_step > 200 and self.num_step <= 300 or self.num_step > 400 and self.num_step <= 500:
-            self.switch_timing=0
-        elif self.num_step >  100 and self.num_step <=  200 or self.num_step <= 400 and self.num_step > 300 :
-            self.switch_timing=1
-        else :
+        if self.num_step % 80 < 40:
+            self.switch_timing = 0
+        elif self.num_step % 80 >= 40:
+            self.switch_timing = 1
+        else:
             self.switch_timing = 0
         ob = self._get_obs()
         rew, done = self.get_reward(ob, action)
@@ -484,11 +484,11 @@ class ReacherEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
         self.num_step += 1
 
         self.do_simulation(action, self.frame_skip)
-        if self.num_step <=  100 or self.num_step > 200 and self.num_step <= 300 or self.num_step > 400 and self.num_step <= 500:
-            self.switch_timing=0
-        elif self.num_step >  100 and self.num_step <=  200 or self.num_step <= 400 and self.num_step > 300 :
-            self.switch_timing=1
-        else :
+        if self.num_step % 80 < 40:
+            self.switch_timing = 0
+        elif self.num_step % 80 >= 40:
+            self.switch_timing = 1
+        else:
             self.switch_timing = 0
         ob = self._get_obs()
         rew, done = self.get_reward(ob, action)
@@ -623,11 +623,11 @@ class ReacherEnv6(mujoco_env.MujocoEnv, utils.EzPickle):
         self.num_step += 1
 
         self.do_simulation(action, self.frame_skip)
-        if self.num_step <=  100 or self.num_step > 200 and self.num_step <= 300 or self.num_step > 400 and self.num_step <= 500:
-            self.switch_timing=0
-        elif self.num_step >  100 and self.num_step <=  200 or self.num_step <= 400 and self.num_step > 300 :
-            self.switch_timing=1
-        else :
+        if self.num_step % 80 < 40:
+            self.switch_timing = 0
+        elif self.num_step % 80 >= 40:
+            self.switch_timing = 1
+        else:
             self.switch_timing = 0
         ob = self._get_obs()
         rew, done = self.get_reward(ob, action)

@@ -19,7 +19,7 @@ import time
 #hamada added
 #from pylab import rcParams
 #rcParams['figure.figsize'] = 10,10
-#plt.rcParams["font.size"] = 45
+plt.rcParams["font.size"] = 45
 #plt.rcParams["lines.linewidth"]= 10
 
 def state_prediction_inverted_pendulum(env,reward_func,resulting_states_list,all_samples,starting_fullenvstate,actions_taken_so_far,
@@ -46,11 +46,13 @@ def state_prediction_inverted_pendulum(env,reward_func,resulting_states_list,all
                 type(env.env.env)) == '<class \'pddm.envs.cheetah.cheetah.HalfCheetahEnv\'>':
             indices_to_vis = [0, 1, 2, 3, 4,5,6,7,8,9]
         elif re.findall('R.?e', str(type(env.env.env))):
-            indices_to_vis = [4,5,6,7,8,9 ]
+            indices_to_vis = [4,5 ]#[4,5,6,7,8,9 ]
         elif re.findall('H.?o', str(type(env.env.env))):
             indices_to_vis = [5]
         elif re.findall('W.?a', str(type(env.env.env))):
             indices_to_vis = [6]
+        else:
+            indices_to_vis = [0,9,18,19,20,21,22,23]
 
 
 
@@ -96,7 +98,11 @@ def state_prediction_inverted_pendulum(env,reward_func,resulting_states_list,all
         if not os.path.isdir(save_dir):
             os.makedirs(save_dir)
         if plot_sideRollouts:
-            plt.savefig(save_dir + "iter{}_rollout{}_step{}".format(iter, rollout_num, step_number))
+            plt.savefig(save_dir + "iter{}_rollout{}_step{}_{}_{}.png".format(iter, rollout_num, step_number,str(abs(env.env.env.model.opt.gravity[-1])),str(abs(env.env.env.model.body_mass[3]))))
+            np.save(save_dir + "/MPE_NN_{}_{}.npy".format(int(abs(env.env.env.model.opt.gravity[-1]*100)),env.env.env.model.body_mass[3]), resulting_states_list[-1][:, sim_num, :])
+            np.save(save_dir + "/MPE_GT_{}_{}.npy".format(int(abs(env.env.env.model.opt.gravity[-1]*100)),env.env.env.model.body_mass[3]), np.array(true_states))
+            #a =np.load(save_dir + "/MPE_NN_981.npy")
+
             #plt.show()
             plt.clf()
 
@@ -342,8 +348,8 @@ def get_actual_EEI_kai(observation_list, action_list):
 def get_actual_EEI_reacher(observation, action,previous_Error,previous_Ene,Final_EEI,test_rollout):
 
     #define EEI
-    tip_xerr= observation[8]
-    tip_yerr = observation[9]
+    tip_xerr= observation[4]
+    tip_yerr = observation[5]
     arm_angulr_velocity0=observation[6]
     arm_angulr_velocity1 = observation[7]
     torque0=action[0]

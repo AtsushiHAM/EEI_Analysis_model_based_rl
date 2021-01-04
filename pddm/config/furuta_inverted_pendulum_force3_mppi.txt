@@ -71,7 +71,7 @@
 'num_fc_layers': [2],
 'depth_fc_layers': [250],
 'ensemble_size': [3],
-'K': [1],
+'K': [3],
 
 ## model training
 'warmstart_training': [False],

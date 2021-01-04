@@ -48,6 +48,8 @@ class DataPerIter:
         self.rollouts_EEIPerIter = []
         self.rollouts_ERPerIter = []
         self.rollouts_ENEPerIter = []
+        self.rollouts_rewardsPerIter_diff = []
+        self.rollouts_scoresPerIter_diff = []
 
 
 #######################

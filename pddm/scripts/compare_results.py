@@ -51,7 +51,8 @@ def main():
             rew = np.load(jobs[i] + '/rollouts_scoresPerIter.npy')
         plot_mean_std(rew[:, 0], rew[:, 1], label=args.labels[i], newfig=False, color=colors[i])
 
-    plt.show()
+    #plt.show()
+    plt.savefig(jobs[0] + "/compare_result", bbox_inches='tight')
 
 if __name__ == '__main__':
     main()

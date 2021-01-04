@@ -73,7 +73,7 @@ def vis_iter_graph(args, load_dir):
         os.makedirs(save_dir)
     iter_num ="iter"+str(args.iter_num)
     from_wherer=0
-    until_where=200
+    until_where=400
     for vis_index in range(len(rollouts_info)):
 
         print("\n\nROLLOUT NUMBER ", vis_index, " .... num steps loaded: ", rollouts_info[vis_index]['actions'].shape[0])

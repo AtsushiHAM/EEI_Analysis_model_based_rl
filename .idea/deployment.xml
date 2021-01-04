@@ -2,6 +2,13 @@
 <project version="4">
   <component name="PublishConfigData" serverName="atsushi@192.168.1.149:22 password" remoteFilesAllowedToDisappearOnAutoupload="false" autoUploadExternalChanges="true">
     <serverData>
+      <paths name="atsushi@172.25.58.111:22">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/atsushi/Documents" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="atsushi@192.168.1.149:22 password">
         <serverdata>
           <mappings>

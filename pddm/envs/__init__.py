@@ -28,4 +28,5 @@ import pddm.envs.sphere
 import pddm.envs.hopper
 import pddm.envs.walker2d
 import pddm.envs.vreacher
+import pddm.envs.v4reacher
 import pddm.envs.twodcheetah

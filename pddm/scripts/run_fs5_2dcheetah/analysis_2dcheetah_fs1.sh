@@ -9,9 +9,9 @@ eval_iteration="~/Documents/pddm-master/pddm/scripts/eval_iteration.py"
 ##############################
 ###job path ########## speed limit 4 500step
 ##############################
-job_path_mppi="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/2hc/2020-12-20/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.9/Iter50_Rollout10_Step500/ensemble3_num2_depth250/pddm_2dcheetah-v0/2020-12-20_15-52-41/cheetah"
+job_path_mppi="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/2hc/2020-12-21/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.9/Iter50_Rollout10_Step500/ensemble3_num2_depth250/pddm_2dcheetah-v0/2020-12-21_20-35-46/cheetah"
 #job_path_rand="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip/2020-11-05/control_delta_1/rand/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum-v0/2020-11-05_13-07-38/inverted_pendulum"
-job_path_mppi_f2="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/2hc/2020-12-20/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.9/Iter50_Rollout10_Step500/ensemble3_num2_depth250/pddm_2dcheetah-v2/2020-12-20_15-53-14/cheetah"
+job_path_mppi_f2="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/2hc/2020-12-21/control_delta_1/Controller_mppi_Horizon20_Can1000_beta0.9/Iter50_Rollout10_Step500/ensemble3_num2_depth250/pddm_2dcheetah-v2/2020-12-21_20-36-22/cheetah"
 #job_path_rand_f2="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip/2020-11-05/control_delta_1/rand/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum-v0/2020-11-05_13-07-38/inverted_pendulum"
 #job_path_mppi_f6="/data/atsushi_data/output/hc/2020-12-16/control_delta_1/Controller_mppi_Horizon20_Can4000_beta0.9/Iter50_Rollout10_Step500/ensemble3_num2_depth250/pddm_cheetah-v6/2020-12-16_16-55-07/cheetah"
 #job_path_rand_f6="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/ip/2020-11-05/control_delta_1/rand/Controller_20_Horizon1000_Can30/Iter10_Rollout500_Step3/ensemble2_num250_depthpddm_furuta_inverted_pendulum-v0/2020-11-05_13-07-38/inverted_pendulum"
@@ -19,7 +19,7 @@ job_path_mppi_f2="/media/ashrising/2619822E48B88AD8/pddm/analysis_data/2hc/2020-
 ##############################
 ###palameter ##########
 ##############################
-iter_num=11
+iter_num=49
 control_delta=1
 
 
@@ -35,7 +35,7 @@ do
   ### No torque sensor####
   #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi --running_times $running_times --iter_num $iter_num --control_delta $control_delta --use_gpu --gpu_frac=0.1
   #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand --running_times $running_times --iter_num $iter_num --control_delta $control_delta --use_gpu
-  python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f2 --running_times $running_times --iter_num $iter_num --control_delta $control_delta --use_gpu --gpu_frac=0.1
+  #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f2 --running_times $running_times --iter_num $iter_num --control_delta $control_delta --use_gpu --gpu_frac=0.1
   #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand --running_times $running_times --iter_num $iter_num --control_delta $control_delta --use_gpu
   #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_mppi_f6 --running_times $running_times --iter_num $iter_num --control_delta $control_delta --use_gpu --gpu_frac=0.1
   #python ~/Documents/pddm-master/pddm/scripts/eval_iteration.py --job_path $job_path_rand --running_times $running_times --iter_num $iter_num --control_delta $control_delta --use_gpu

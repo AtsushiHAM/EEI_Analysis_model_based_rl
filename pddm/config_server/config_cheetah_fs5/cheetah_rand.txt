@@ -27,7 +27,7 @@
 
 ## env
 'env_name': ['pddm_cheetah-v0'],
-'rollout_length': [500],
+'rollout_length': [600],
 'num_iters': [50],
 'num_trajectories_per_iter': [10],
 
@@ -71,7 +71,7 @@
 'num_fc_layers': [2],
 'depth_fc_layers': [250],
 'ensemble_size': [3],
-'K': [1],
+'K': [2],
 
 ## model training
 'warmstart_training': [False],
@@ -95,8 +95,8 @@
 'cem_num_elites': [5],
 
 ## mppi
-'mppi_kappa': [10],
+'mppi_kappa': [1],
 'mppi_mag_noise': [0.9],
-'mppi_beta': [0.7],
+'mppi_beta': [0.9],
 
 }

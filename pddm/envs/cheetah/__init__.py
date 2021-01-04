@@ -31,3 +31,34 @@ register(
     entry_point='pddm.envs.cheetah.cheetah:HalfCheetahEnv6',
     max_episode_steps=1000,
 )
+
+register(
+    id='pddm_cheetah_pre-v2',
+    entry_point='pddm.envs.cheetah.cheetah:HalfCheetahEnv_Pre2',
+    max_episode_steps=1000,
+)
+
+
+register(
+    id='pddm_cheetah_cgr-v0',
+    entry_point='pddm.envs.cheetah.cheetah_cgr:HalfCheetahEnv',
+    max_episode_steps=1000,
+)
+
+register(
+    id='pddm_cheetah_cgr-v2',
+    entry_point='pddm.envs.cheetah.cheetah_cgr:HalfCheetahEnv2',
+    max_episode_steps=1000,
+)
+
+register(
+    id='pddm_cheetah_cgr-v6',
+    entry_point='pddm.envs.cheetah.cheetah_cgr:HalfCheetahEnv6',
+    max_episode_steps=1000,
+)
+
+register(
+    id='pddm_cheetah_pre_cgr-v2',
+    entry_point='pddm.envs.cheetah.cheetah_cgr:HalfCheetahEnv_Pre2',
+    max_episode_steps=1000,
+)

@@ -36,6 +36,8 @@ class Policy_Random(object):
         self.rand_ac = np.random.uniform(self.low_val, self.high_val, self.shape)
 
     def get_action(self, observation, prev_action, random_sampling_params, hold_action_overrideToOne=False):
+        #if self.cpunter ==0:
+        #    print("gravity {}".format(self.env.env.model.opt.gravity))
 
         # params for random sampling
         sample_velocities = random_sampling_params['sample_velocities']

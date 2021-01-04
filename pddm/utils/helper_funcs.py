@@ -216,6 +216,8 @@ def collect_random_rollouts(env,
 
     #setup sampler
     print("Beginning to do ", num_rollouts, " random rollouts.")
+    print("gravity {}".format(env.env.env.model.opt.gravity))
+    print("mass {}".format(env.env.env.model.body_mass))
     c = CollectSamples(
         env, random_policy, visualize, dt_from_xml, is_random=True, random_sampling_params=random_sampling_params)
 
@@ -256,7 +258,7 @@ def do_groundtruth_rollout(acs, env, starting_fullenvstate,
         env.env.env)))
     i=0
 
-
+    print("i {}".format(i))
     #get the env to do what it's done so far
     for ac in actions_taken_so_far:
     #hamada changed
@@ -264,6 +266,7 @@ def do_groundtruth_rollout(acs, env, starting_fullenvstate,
         if (ac.shape[0] == 1):
             ac = ac[0]
         if not job:
+            print("no_perturb action taken so far{} and{}".format(ac,i))
             pass
         elif job[0] == 'IP':
             if i == 0:

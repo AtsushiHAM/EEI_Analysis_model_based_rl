@@ -11,7 +11,7 @@ GYM_ASSET_PATH = os.path.join(os.path.dirname(__file__), 'assets')
 PI=3.14159265359
 
 class VReacherEnv(mujoco_env.MujocoEnv, utils.EzPickle):
-    def __init__(self, file_path=os.path.join(GYM_ASSET_PATH, "vertical_arm.xml"), max_step=1000):
+    def __init__(self, file_path=os.path.join(GYM_ASSET_PATH, "vertical_arm_ngr.xml"), max_step=1000):
         self.time = 0
         self.num_step = 0
         self.max_step = max_step  # maximum number of time steps for one episode
@@ -44,8 +44,8 @@ class VReacherEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             batch_mode = True
 
         # get vars
-        difference_posx= observations[:, 8]
-        difference_posy = observations[:, 9]
+        difference_posx= observations[:, 4]
+        difference_posy = observations[:, 5]
 
         # calc rew
         self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
@@ -68,13 +68,13 @@ class VReacherEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
     def step(self, action):
         self.num_step += 1
-
+        timing=100
         self.do_simulation(action, self.frame_skip)
-        if self.num_step <=  100 or self.num_step > 200 and self.num_step <= 300 or self.num_step > 400 and self.num_step <= 500:
-            self.switch_timing=0
-        elif self.num_step >  100 and self.num_step <=  200 or self.num_step <= 400 and self.num_step > 300 :
-            self.switch_timing=1
-        else :
+        if self.num_step % timing < timing/2:
+            self.switch_timing = 0
+        elif self.num_step % timing >= timing/2:
+            self.switch_timing = 1
+        else:
             self.switch_timing = 0
         ob = self._get_obs()
         rew, done = self.get_reward(ob, action)
@@ -118,11 +118,9 @@ class VReacherEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             #self.sim.data.qvel.flat[:2],
             #self.get_body_com("target"),
             #self.get_body_com("fingertip") - self.get_body_com("target")
-            self.obs_dict['cos'] ,##01
-            self.obs_dict['sin'] ,##23
-            self.obs_dict['joints_pos'],##34
-            self.obs_dict['joints_vel'],##56
-            self.obs_dict['diferrence_pos'],##78
+            self.obs_dict['joints_pos'],##01
+            self.obs_dict['joints_vel'],##23
+            self.obs_dict['diferrence_pos'],##45
             #self.obs_dict['goal_vel']
 
         ])
@@ -153,7 +151,7 @@ class VReacherEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             self.data.xfrc_applied = all_dim
 
 class VReacherEnv1_1(mujoco_env.MujocoEnv, utils.EzPickle):
-    def __init__(self, file_path=os.path.join(GYM_ASSET_PATH, "vertical_arm.xml"), max_step=1000):
+    def __init__(self, file_path=os.path.join(GYM_ASSET_PATH, "vertical_arm_ngr.xml"), max_step=1000):
         self.time = 0
         self.num_step = 0
         self.max_step = max_step  # maximum number of time steps for one episode
@@ -186,8 +184,8 @@ class VReacherEnv1_1(mujoco_env.MujocoEnv, utils.EzPickle):
             batch_mode = True
 
         # get vars
-        difference_posx= observations[:, 8]
-        difference_posy = observations[:, 9]
+        difference_posx= observations[:, 4]
+        difference_posy = observations[:, 5]
         self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
         self.reward_dict['goal_difference'] = np.sqrt((difference_posx) ** 2 + (difference_posy) ** 2)
         self.reward_dict['r_allive'] = np.array(10)  # np.array(10 - 50 * (np.abs(difference_posx) + np.abs(difference_posy)))
@@ -208,13 +206,13 @@ class VReacherEnv1_1(mujoco_env.MujocoEnv, utils.EzPickle):
 
     def step(self, action):
         self.num_step += 1
-
+        timing=100
         self.do_simulation(action, self.frame_skip)
-        if self.num_step <=  100 or self.num_step > 200 and self.num_step <= 300 or self.num_step > 400 and self.num_step <= 500:
-            self.switch_timing=0
-        elif self.num_step >  100 and self.num_step <=  200 or self.num_step <= 400 and self.num_step > 300 :
-            self.switch_timing=1
-        else :
+        if self.num_step % timing < timing/2:
+            self.switch_timing = 0
+        elif self.num_step % timing >= timing/2:
+            self.switch_timing = 1
+        else:
             self.switch_timing = 0
         ob = self._get_obs()
         rew, done = self.get_reward(ob, action)
@@ -233,14 +231,8 @@ class VReacherEnv1_1(mujoco_env.MujocoEnv, utils.EzPickle):
     def reset_model(self):
         self.num_step = 0
         self.reset_pose = self.np_random.uniform(low=-0.1, high=0.1, size=self.model.nq) + self.init_qpos
-        while True:
-            self.goal = np.array([1.5,0])#self.np_random.uniform(low=-.2, high=.2, size=2)
-            if np.linalg.norm(self.goal) < 2:
-                break
-        self.reset_pose[-2:] = self.goal
         self.reset_vel = self.init_qvel + self.np_random.uniform(low=-.005, high=.005, size=self.model.nv)
-        self.reset_vel[-2:] = 0
-        #self.set_state(qpos, qvel)
+        # self.set_state(qpos, qvel)
         return self.do_reset(self.reset_pose.copy(), self.reset_vel.copy())
 
     def _get_obs(self):
@@ -265,11 +257,9 @@ class VReacherEnv1_1(mujoco_env.MujocoEnv, utils.EzPickle):
             #self.sim.data.qvel.flat[:2],
             #self.get_body_com("target"),
             #self.get_body_com("fingertip") - self.get_body_com("target")
-            self.obs_dict['cos'] , ##01
-            self.obs_dict['sin'] ,##23
-            self.obs_dict['joints_pos'],##45
-            self.obs_dict['joints_vel'],##67
-            self.obs_dict['diferrence_pos'] , ##89
+            self.obs_dict['joints_pos'],##01
+            self.obs_dict['joints_vel'],##23
+            self.obs_dict['diferrence_pos'] , ##45
             self.obs_dict['joints_force'],
 
 
@@ -302,7 +292,7 @@ class VReacherEnv1_1(mujoco_env.MujocoEnv, utils.EzPickle):
 
 
 class VReacherEnv1_4(mujoco_env.MujocoEnv, utils.EzPickle):
-    def __init__(self, file_path=os.path.join(GYM_ASSET_PATH, "vertical_arm.xml"), max_step=1000):
+    def __init__(self, file_path=os.path.join(GYM_ASSET_PATH, "vertical_arm_ngr.xml"), max_step=1000):
         self.time = 0
         self.num_step = 0
         self.max_step = max_step  # maximum number of time steps for one episode
@@ -335,8 +325,8 @@ class VReacherEnv1_4(mujoco_env.MujocoEnv, utils.EzPickle):
             batch_mode = True
 
         # get vars
-        difference_posx= observations[:, 8]
-        difference_posy = observations[:, 9]
+        difference_posx= observations[:, 4]
+        difference_posy = observations[:, 5]
 
         # calc rew
         self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
@@ -359,13 +349,13 @@ class VReacherEnv1_4(mujoco_env.MujocoEnv, utils.EzPickle):
 
     def step(self, action):
         self.num_step += 1
-
+        timing=100
         self.do_simulation(action, self.frame_skip)
-        if self.num_step <=  100 or self.num_step > 200 and self.num_step <= 300 or self.num_step > 400 and self.num_step <= 500:
-            self.switch_timing=0
-        elif self.num_step >  100 and self.num_step <=  200 or self.num_step <= 400 and self.num_step > 300 :
-            self.switch_timing=1
-        else :
+        if self.num_step % timing < timing/2:
+            self.switch_timing = 0
+        elif self.num_step % timing >= timing/2:
+            self.switch_timing = 1
+        else:
             self.switch_timing = 0
         ob = self._get_obs()
         rew, done = self.get_reward(ob, action)
@@ -384,14 +374,8 @@ class VReacherEnv1_4(mujoco_env.MujocoEnv, utils.EzPickle):
     def reset_model(self):
         self.num_step = 0
         self.reset_pose = self.np_random.uniform(low=-0.1, high=0.1, size=self.model.nq) + self.init_qpos
-        while True:
-            self.goal = np.array([1.5,0])#self.np_random.uniform(low=-.2, high=.2, size=2)
-            if np.linalg.norm(self.goal) < 2:
-                break
-        self.reset_pose[-2:] = self.goal
         self.reset_vel = self.init_qvel + self.np_random.uniform(low=-.005, high=.005, size=self.model.nv)
-        self.reset_vel[-2:] = 0
-        #self.set_state(qpos, qvel)
+        # self.set_state(qpos, qvel)
         return self.do_reset(self.reset_pose.copy(), self.reset_vel.copy())
 
     def _get_obs(self):
@@ -416,11 +400,9 @@ class VReacherEnv1_4(mujoco_env.MujocoEnv, utils.EzPickle):
             #self.sim.data.qvel.flat[:2],
             #self.get_body_com("target"),
             #self.get_body_com("fingertip") - self.get_body_com("target")
-            self.obs_dict['cos'] , ##01
-            self.obs_dict['sin'] ,##23
-            self.obs_dict['joints_pos'],##45
-            self.obs_dict['joints_vel'],##67
-            self.obs_dict['diferrence_pos'] , ##89
+            self.obs_dict['joints_pos'],##01
+            self.obs_dict['joints_vel'],##23
+            self.obs_dict['diferrence_pos'] , ##45
             self.obs_dict['joints_force'],
 
 
@@ -452,7 +434,7 @@ class VReacherEnv1_4(mujoco_env.MujocoEnv, utils.EzPickle):
         self.data.xfrc_applied = all_dim
 
 class VReacherEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
-    def __init__(self, file_path=os.path.join(GYM_ASSET_PATH, "vertical_arm.xml"), max_step=1000):
+    def __init__(self, file_path=os.path.join(GYM_ASSET_PATH, "vertical_arm_ngr.xml"), max_step=1000):
         self.time = 0
         self.num_step = 0
         self.max_step = max_step  # maximum number of time steps for one episode
@@ -485,10 +467,10 @@ class VReacherEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
             batch_mode = True
 
         # get vars
-        difference_posx= observations[:, 8]
-        difference_posy = observations[:, 9]
+        difference_posx= observations[:, 4]
+        difference_posy = observations[:, 5]
 
-        # calc rew
+        # calc re
         # self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
         # self.reward_dict['stable'] = np.cos(pendulum_angle)
         self.reward_dict['actions'] = np.sum(np.square(actions), axis=1)
@@ -506,18 +488,18 @@ class VReacherEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
         return self.reward_dict['r_total'], dones
 
     def get_score(self, obs):
-        goal_difference=abs(obs[8]) + abs(obs[9])
+        goal_difference=abs(obs[4]) + abs(obs[5])
         return goal_difference
 
     def step(self, action):
         self.num_step += 1
-
+        timing=100
         self.do_simulation(action, self.frame_skip)
-        if self.num_step <=  100 or self.num_step > 200 and self.num_step <= 300 or self.num_step > 400 and self.num_step <= 500:
-            self.switch_timing=0
-        elif self.num_step >  100 and self.num_step <=  200 or self.num_step <= 400 and self.num_step > 300 :
-            self.switch_timing=1
-        else :
+        if self.num_step % timing < timing/2:
+            self.switch_timing = 0
+        elif self.num_step % timing >= timing/2:
+            self.switch_timing = 1
+        else:
             self.switch_timing = 0
         ob = self._get_obs()
         rew, done = self.get_reward(ob, action)
@@ -536,14 +518,8 @@ class VReacherEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
     def reset_model(self):
         self.num_step = 0
         self.reset_pose = self.np_random.uniform(low=-0.1, high=0.1, size=self.model.nq) + self.init_qpos
-        while True:
-            self.goal = self.np_random.uniform(low=-.2, high=.2, size=2)#np.array([1.5,0])#self.np_random.uniform(low=-.2, high=.2, size=2)
-            if np.linalg.norm(self.goal) < 2:
-                break
-        self.reset_pose[-2:] = self.goal
         self.reset_vel = self.init_qvel + self.np_random.uniform(low=-.005, high=.005, size=self.model.nv)
-        self.reset_vel[-2:] = 0
-        #self.set_state(qpos, qvel)
+        # self.set_state(qpos, qvel)
         return self.do_reset(self.reset_pose.copy(), self.reset_vel.copy())
 
     def _get_obs(self):
@@ -569,11 +545,9 @@ class VReacherEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
             #self.sim.data.qvel.flat[:2],
             #self.get_body_com("target"),
             #self.get_body_com("fingertip") - self.get_body_com("target")
-            self.obs_dict['cos'] , ##01
-            self.obs_dict['sin'] ,##23
-            self.obs_dict['joints_pos'],##45
-            self.obs_dict['joints_vel'],##67
-            self.obs_dict['diferrence_pos'] , ##89
+            self.obs_dict['joints_pos'],##01
+            self.obs_dict['joints_vel'],##23
+            self.obs_dict['diferrence_pos'] , ##45
             self.obs_dict['joints_force'],
 
 
@@ -606,7 +580,7 @@ class VReacherEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
 
 
 class VReacherEnv6(mujoco_env.MujocoEnv, utils.EzPickle):
-    def __init__(self, file_path=os.path.join(GYM_ASSET_PATH, "vertical_arm.xml"), max_step=1000):
+    def __init__(self, file_path=os.path.join(GYM_ASSET_PATH, "vertical_arm_ngr.xml"), max_step=1000):
         self.time = 0
         self.num_step = 0
         self.max_step = max_step  # maximum number of time steps for one episode
@@ -639,8 +613,8 @@ class VReacherEnv6(mujoco_env.MujocoEnv, utils.EzPickle):
             batch_mode = True
 
         # get vars
-        difference_posx= observations[:, 8]
-        difference_posy = observations[:, 9]
+        difference_posx= observations[:, 4]
+        difference_posy = observations[:, 5]
 
         # calc rew
         # self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
@@ -666,13 +640,13 @@ class VReacherEnv6(mujoco_env.MujocoEnv, utils.EzPickle):
 
     def step(self, action):
         self.num_step += 1
-
+        timing=100
         self.do_simulation(action, self.frame_skip)
-        if self.num_step <=  100 or self.num_step > 200 and self.num_step <= 300 or self.num_step > 400 and self.num_step <= 500:
-            self.switch_timing=0
-        elif self.num_step >  100 and self.num_step <=  200 or self.num_step <= 400 and self.num_step > 300 :
-            self.switch_timing=1
-        else :
+        if self.num_step % timing < timing/2:
+            self.switch_timing = 0
+        elif self.num_step % timing >= timing/2:
+            self.switch_timing = 1
+        else:
             self.switch_timing = 0
         ob = self._get_obs()
         rew, done = self.get_reward(ob, action)
@@ -691,14 +665,8 @@ class VReacherEnv6(mujoco_env.MujocoEnv, utils.EzPickle):
     def reset_model(self):
         self.num_step = 0
         self.reset_pose = self.np_random.uniform(low=-0.1, high=0.1, size=self.model.nq) + self.init_qpos
-        while True:
-            self.goal = self.np_random.uniform(low=-.2, high=.2, size=2)#np.array([1,0])#self.np_random.uniform(low=-.2, high=.2, size=2)
-            if np.linalg.norm(self.goal) < 2:
-                break
-        self.reset_pose[-2:] = self.goal
         self.reset_vel = self.init_qvel + self.np_random.uniform(low=-.005, high=.005, size=self.model.nv)
-        self.reset_vel[-2:] = 0
-        #self.set_state(qpos, qvel)
+        # self.set_state(qpos, qvel)
         return self.do_reset(self.reset_pose.copy(), self.reset_vel.copy())
 
     def _get_obs(self):
@@ -724,11 +692,9 @@ class VReacherEnv6(mujoco_env.MujocoEnv, utils.EzPickle):
             #self.sim.data.qvel.flat[:2],
             #self.get_body_com("target"),
             #self.get_body_com("fingertip") - self.get_body_com("target")
-            self.obs_dict['cos'] , ##01
-            self.obs_dict['sin'] ,##23
-            self.obs_dict['joints_pos'],##45
-            self.obs_dict['joints_vel'],##67
-            self.obs_dict['diferrence_pos'] , ##89
+            self.obs_dict['joints_pos'],##01
+            self.obs_dict['joints_vel'],##23
+            self.obs_dict['diferrence_pos'] , ##45
             self.obs_dict['joints_force'],
 
 

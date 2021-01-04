@@ -62,20 +62,26 @@ class HalfCheetahEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         height = observations[:, 1]
         bthigh=observations[:, 3]
         tthigh = observations[:, 4]
+        bthigh_vel = observations[:, 8]
+        tthigh_vel = observations[:, 9]
+        #pressure0= observations[:, 10]
+        #pressure1 = observations[:, 11]
 
         # goal vel
         goal_vel = 4.0
+        goal_omega = 5.0
 
         # calc rew
         self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        self.reward_dict['cons_run'] = goal_vel - np.abs(xvel - goal_vel)
+        self.reward_dict['cons_run'] = 10 - np.abs(xvel - goal_vel)
         self.reward_dict['body_angle_pena'] = -20.0 * np.abs(body_angle)
         self.reward_dict['height_pena'] = -20.0 * np.abs(height - (-0.13))
-        self.reward_dict['phase_error'] = -20.0 * np.abs(np.sin(bthigh-tthigh))
-        self.reward_dict['xvel'] = xvel
-        #self.reward_dict['r_total'] = self.reward_dict['cons_run'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] + self.reward_dict['height_pena']
+        #self.reward_dict['phase_error'] = - np.abs(bthigh_vel-(goal_omega-0.05*pressure0*np.cos(bthigh)))
+        #self.reward_dict['phase_error1'] = - np.abs(tthigh_vel-(goal_omega-0.05*pressure1*np.cos(tthigh)))
+        self.reward_dict['xvel'] = 10*xvel
+        self.reward_dict['r_total'] = self.reward_dict['cons_run'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] #+ self.reward_dict['height_pena']
         #self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] + self.reward_dict['height_pena']
-        self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['phase_error']
+        #self.reward_dict['r_total'] = self.reward_dict['xvel'] +self.reward_dict['phase_error'] +self.reward_dict['phase_error1']
 
         #check if done
         dones = np.zeros((observations.shape[0],))
@@ -115,10 +121,12 @@ class HalfCheetahEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         self.obs_dict = {}
         self.obs_dict['joints_pos'] = self.sim.data.qpos.flat.copy()
         self.obs_dict['joints_vel'] = self.sim.data.qvel.flat.copy()
+        #self.obs_dict['pressure_force'] = np.asarray([self.data.sensordata[6], self.data.sensordata[7]]).flat.copy()
 
         return np.concatenate([
             self.obs_dict['joints_pos'], #9
-            self.obs_dict['joints_vel']#9
+            self.obs_dict['joints_vel'],#9
+            #self.obs_dict['pressure_force']
         ])
 
 
@@ -170,11 +178,11 @@ class HalfCheetahEnv1_1(mujoco_env.MujocoEnv, utils.EzPickle):
             done: (batchsize,1) or (1,), True if reaches terminal state
         """
 
-        # initialize and reshape as needed, for batch mode
+        #initialize and reshape as needed, for batch mode
         self.reward_dict = {}
-        if len(observations.shape) == 1:
-            observations = np.expand_dims(observations, axis=0)
-            actions = np.expand_dims(actions, axis=0)
+        if len(observations.shape)==1:
+            observations = np.expand_dims(observations, axis = 0)
+            actions = np.expand_dims(actions, axis = 0)
             batch_mode = False
         else:
             batch_mode = True
@@ -183,28 +191,34 @@ class HalfCheetahEnv1_1(mujoco_env.MujocoEnv, utils.EzPickle):
         xvel = observations[:, 5]
         body_angle = observations[:, 2]
         height = observations[:, 1]
-        bthigh = observations[:, 3]
+        bthigh=observations[:, 3]
         tthigh = observations[:, 4]
+        bthigh_vel = observations[:, 8]
+        tthigh_vel = observations[:, 9]
+        #pressure0= observations[:, 10]
+        #pressure1 = observations[:, 11]
 
         # goal vel
         goal_vel = 4.0
+        goal_omega = 5.0
 
         # calc rew
         self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        self.reward_dict['cons_run'] = goal_vel - np.abs(xvel - goal_vel)
+        self.reward_dict['cons_run'] = 10 - np.abs(xvel - goal_vel)
         self.reward_dict['body_angle_pena'] = -20.0 * np.abs(body_angle)
         self.reward_dict['height_pena'] = -20.0 * np.abs(height - (-0.13))
-        self.reward_dict['phase_error'] = -20.0 * np.abs(np.sin(bthigh - tthigh))
-        self.reward_dict['xvel'] = xvel
-        # self.reward_dict['r_total'] = self.reward_dict['cons_run'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] + self.reward_dict['height_pena']
-        # self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] + self.reward_dict['height_pena']
-        self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['phase_error']
+        #self.reward_dict['phase_error'] = - np.abs(bthigh_vel-(goal_omega-0.05*pressure0*np.cos(bthigh)))
+        #self.reward_dict['phase_error1'] = - np.abs(tthigh_vel-(goal_omega-0.05*pressure1*np.cos(tthigh)))
+        self.reward_dict['xvel'] = 10*xvel
+        self.reward_dict['r_total'] = self.reward_dict['cons_run'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] #+ self.reward_dict['height_pena']
+        #self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] + self.reward_dict['height_pena']
+        #self.reward_dict['r_total'] = self.reward_dict['xvel'] +self.reward_dict['phase_error'] +self.reward_dict['phase_error1']
 
-        # check if done
+        #check if done
         dones = np.zeros((observations.shape[0],))
-        dones[body_angle > 1.0] = 1
+        dones[body_angle>1.0] = 1
 
-        # return
+        #return
         if not batch_mode:
             return self.reward_dict['r_total'][0], dones[0]
         return self.reward_dict['r_total'], dones
@@ -235,11 +249,13 @@ class HalfCheetahEnv1_1(mujoco_env.MujocoEnv, utils.EzPickle):
         self.obs_dict = {}
         self.obs_dict['joints_pos'] = self.sim.data.qpos.flat.copy()
         self.obs_dict['joints_vel'] = self.sim.data.qvel.flat.copy()
+        #self.obs_dict['pressure_force'] = np.asarray([self.data.sensordata[6], self.data.sensordata[7]]).flat.copy()
         self.obs_dict['joints_force'] = np.asarray([ self.data.sensordata[1]]).flat.copy()
 
         return np.concatenate([
             self.obs_dict['joints_pos'],  # 9
             self.obs_dict['joints_vel'],  # 9
+            #self.obs_dict['pressure_force'],
             self.obs_dict['joints_force']
         ])
 
@@ -290,11 +306,11 @@ class HalfCheetahEnv1_4(mujoco_env.MujocoEnv, utils.EzPickle):
             done: (batchsize,1) or (1,), True if reaches terminal state
         """
 
-        # initialize and reshape as needed, for batch mode
+        #initialize and reshape as needed, for batch mode
         self.reward_dict = {}
-        if len(observations.shape) == 1:
-            observations = np.expand_dims(observations, axis=0)
-            actions = np.expand_dims(actions, axis=0)
+        if len(observations.shape)==1:
+            observations = np.expand_dims(observations, axis = 0)
+            actions = np.expand_dims(actions, axis = 0)
             batch_mode = False
         else:
             batch_mode = True
@@ -303,28 +319,34 @@ class HalfCheetahEnv1_4(mujoco_env.MujocoEnv, utils.EzPickle):
         xvel = observations[:, 5]
         body_angle = observations[:, 2]
         height = observations[:, 1]
-        bthigh = observations[:, 3]
+        bthigh=observations[:, 3]
         tthigh = observations[:, 4]
+        bthigh_vel = observations[:, 8]
+        tthigh_vel = observations[:, 9]
+        #pressure0= observations[:, 10]
+        #pressure1 = observations[:, 11]
 
         # goal vel
         goal_vel = 4.0
+        goal_omega = 5.0
 
         # calc rew
         self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        self.reward_dict['cons_run'] = goal_vel - np.abs(xvel - goal_vel)
+        self.reward_dict['cons_run'] = 10 - np.abs(xvel - goal_vel)
         self.reward_dict['body_angle_pena'] = -20.0 * np.abs(body_angle)
         self.reward_dict['height_pena'] = -20.0 * np.abs(height - (-0.13))
-        self.reward_dict['phase_error'] = -20.0 * np.abs(np.sin(bthigh - tthigh))
-        self.reward_dict['xvel'] = xvel
-        # self.reward_dict['r_total'] = self.reward_dict['cons_run'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] + self.reward_dict['height_pena']
-        # self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] + self.reward_dict['height_pena']
-        self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['phase_error']
+        #self.reward_dict['phase_error'] = - np.abs(bthigh_vel-(goal_omega-0.05*pressure0*np.cos(bthigh)))
+        #self.reward_dict['phase_error1'] = - np.abs(tthigh_vel-(goal_omega-0.05*pressure1*np.cos(tthigh)))
+        self.reward_dict['xvel'] = 10* xvel
+        self.reward_dict['r_total'] = self.reward_dict['cons_run'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] #+ self.reward_dict['height_pena']
+        #self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] + self.reward_dict['height_pena']
+        #self.reward_dict['r_total'] = self.reward_dict['xvel'] +self.reward_dict['phase_error'] +self.reward_dict['phase_error1']
 
-        # check if done
+        #check if done
         dones = np.zeros((observations.shape[0],))
-        dones[body_angle > 1.0] = 1
+        dones[body_angle>1.0] = 1
 
-        # return
+        #return
         if not batch_mode:
             return self.reward_dict['r_total'][0], dones[0]
         return self.reward_dict['r_total'], dones
@@ -355,11 +377,13 @@ class HalfCheetahEnv1_4(mujoco_env.MujocoEnv, utils.EzPickle):
         self.obs_dict = {}
         self.obs_dict['joints_pos'] = self.sim.data.qpos.flat.copy()
         self.obs_dict['joints_vel'] = self.sim.data.qvel.flat.copy()
+        #self.obs_dict['pressure_force'] = np.asarray([self.data.sensordata[6], self.data.sensordata[7]]).flat.copy()
         self.obs_dict['joints_force'] = np.asarray([ self.data.sensordata[4]]).flat.copy()
 
         return np.concatenate([
             self.obs_dict['joints_pos'],  # 9
             self.obs_dict['joints_vel'],  # 9
+            #self.obs_dict['pressure_force'],
             self.obs_dict['joints_force']
         ])
 
@@ -411,11 +435,11 @@ class HalfCheetahEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
             done: (batchsize,1) or (1,), True if reaches terminal state
         """
 
-        # initialize and reshape as needed, for batch mode
+        #initialize and reshape as needed, for batch mode
         self.reward_dict = {}
-        if len(observations.shape) == 1:
-            observations = np.expand_dims(observations, axis=0)
-            actions = np.expand_dims(actions, axis=0)
+        if len(observations.shape)==1:
+            observations = np.expand_dims(observations, axis = 0)
+            actions = np.expand_dims(actions, axis = 0)
             batch_mode = False
         else:
             batch_mode = True
@@ -424,28 +448,34 @@ class HalfCheetahEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
         xvel = observations[:, 5]
         body_angle = observations[:, 2]
         height = observations[:, 1]
-        bthigh = observations[:, 3]
+        bthigh=observations[:, 3]
         tthigh = observations[:, 4]
+        bthigh_vel = observations[:, 8]
+        tthigh_vel = observations[:, 9]
+        #pressure0= observations[:, 10]
+        #pressure1 = observations[:, 11]
 
         # goal vel
         goal_vel = 4.0
+        goal_omega = 5.0
 
         # calc rew
         self.reward_dict['actions'] = -0.1 * np.sum(np.square(actions), axis=1)
-        self.reward_dict['cons_run'] = goal_vel - np.abs(xvel - goal_vel)
+        self.reward_dict['cons_run'] = 10 - np.abs(xvel - goal_vel)
         self.reward_dict['body_angle_pena'] = -20.0 * np.abs(body_angle)
         self.reward_dict['height_pena'] = -20.0 * np.abs(height - (-0.13))
-        self.reward_dict['phase_error'] = -20.0 * np.abs(np.sin(bthigh - tthigh))
-        self.reward_dict['xvel'] = xvel
-        # self.reward_dict['r_total'] = self.reward_dict['cons_run'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] + self.reward_dict['height_pena']
-        # self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] + self.reward_dict['height_pena']
-        self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['phase_error']
+        #self.reward_dict['phase_error'] = - np.abs(bthigh_vel-(goal_omega-0.05*pressure0*np.cos(bthigh)))
+        #self.reward_dict['phase_error1'] = - np.abs(tthigh_vel-(goal_omega-0.05*pressure1*np.cos(tthigh)))
+        self.reward_dict['xvel'] =10* xvel
+        self.reward_dict['r_total'] = self.reward_dict['cons_run'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] #+ self.reward_dict['height_pena']
+        #self.reward_dict['r_total'] = self.reward_dict['xvel'] + self.reward_dict['actions'] + self.reward_dict['body_angle_pena'] + self.reward_dict['height_pena']
+        #self.reward_dict['r_total'] = self.reward_dict['xvel'] +self.reward_dict['phase_error'] +self.reward_dict['phase_error1']
 
-        # check if done
+        #check if done
         dones = np.zeros((observations.shape[0],))
-        dones[body_angle > 1.0] = 1
+        dones[body_angle>1.0] = 1
 
-        # return
+        #return
         if not batch_mode:
             return self.reward_dict['r_total'][0], dones[0]
         return self.reward_dict['r_total'], dones
@@ -479,11 +509,13 @@ class HalfCheetahEnv2(mujoco_env.MujocoEnv, utils.EzPickle):
         self.obs_dict = {}
         self.obs_dict['joints_pos'] = self.sim.data.qpos.flat.copy()
         self.obs_dict['joints_vel'] = self.sim.data.qvel.flat.copy()
+        #self.obs_dict['pressure_force'] = np.asarray([self.data.sensordata[6], self.data.sensordata[7]]).flat.copy()
         self.obs_dict['joints_force'] = np.asarray([self.data.sensordata[1],self.data.sensordata[4]]).flat.copy()
 
         return np.concatenate([
             self.obs_dict['joints_pos'], #9
             self.obs_dict['joints_vel'], #9
+            #self.obs_dict['pressure_force'],
             self.obs_dict['joints_force']
         ])
 

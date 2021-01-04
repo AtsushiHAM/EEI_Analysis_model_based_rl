@@ -43,7 +43,7 @@ from pddm.utils.utils import eei_inverted_pendulum
 
 SCRIPT_DIR = os.path.dirname(__file__)
 
-def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
+def run_job(args, simulation_version,control_delta,reward_type,use_different_env,save_dir=None):
 
     # Continue training from an existing iteration
     if args.continue_run>-1:
@@ -90,17 +90,45 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
 
         loader = Loader(save_dir)
         env, dt_from_xml = create_env(env_name)
+        if use_different_env:
+            if env_name=="pddm_vreacher-v0":
+                differnt_env, dt_from_xml = create_env('pddm_vreacher_ngr-v0')
+            elif env_name=="pddm_vreacher-v11":
+                differnt_env, dt_from_xml = create_env('pddm_vreacher_ngr-v11')
+            elif env_name == "pddm_vreacher-v14":
+                differnt_env, dt_from_xml = create_env('pddm_vreacher_ngr-v14')
+            elif env_name == "pddm_vreacher-v214":
+                differnt_env, dt_from_xml = create_env('pddm_vreacher_ngr-v214')
+            elif env_name == "pddm_cheetah-v0":
+                differnt_env, dt_from_xml = create_env('pddm_cheetah_cgr-v0')
+            elif env_name == "pddm_cheetah-v2":
+                differnt_env, dt_from_xml = create_env('pddm_cheetah_cgr-v2')
+            elif env_name == "pddm_cheetah-v6":
+                differnt_env, dt_from_xml = create_env('pddm_cheetah_cgr-v6')
+            elif env_name == "pddm_cheetah_pre-v2":
+                differnt_env, dt_from_xml = create_env('pddm_cheetah_pre_cgr-v2')
+            elif env_name == "pddm_vreacher_ngr-v214":
+                differnt_env, dt_from_xml = create_env('pddm_vreacher-v214')
+            elif env_name == "pddm_v4reacher-v4":
+                differnt_env, dt_from_xml = create_env('pddm_v4reacher_ngr-v4')
+
+
         #env.env.env.render()
         args.dt_from_xml = dt_from_xml
         random_policy = Policy_Random(env.env)
+        if use_different_env:
+            random_policy_diff = Policy_Random(differnt_env.env)
+
+        ##hamada added
+        ### set seeds
+        #env.env.env.seed(args.seed)
 
         #doing a render here somehow allows it to not produce a seg fault error later when visualizing
         if args.visualize_MPC_rollout:
             render_env(env)
             render_stop(env)
 
-        #env.env.env.frame_skip =5
-        print("simulation frame skip and dt checl {} and {} ".format(env.env.env.frame_skip,env.env.env.dt))
+        print("simulation frame skip and dt check {} and {} ".format(env.env.env.frame_skip,env.env.env.dt))
 
         #################################################
         ### initialize or load in info
@@ -126,22 +154,68 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
             if args.load_existing_random_data:
                 rollouts_trainRand, rollouts_valRand = loader.load_initialData()
             else:
-
-
-                #training
+                """#training
                 rollouts_trainRand = collect_random_rollouts(
                     env, random_policy, args.num_rand_rollouts_train,
                     args.rand_rollout_length, dt_from_xml, args)
                 #validation
                 rollouts_valRand = collect_random_rollouts(
                     env, random_policy, args.num_rand_rollouts_val,
-                    args.rand_rollout_length, dt_from_xml, args)
+                    args.rand_rollout_length, dt_from_xml, args)"""
 
-            #convert (rollouts --> dataset)
-            dataset_trainRand = data_processor.convertRolloutsToDatasets(
-                rollouts_trainRand)
-            dataset_valRand = data_processor.convertRolloutsToDatasets(
-                rollouts_valRand)
+                if use_different_env:
+                    print("use_different_env")
+                    # training
+                    rollouts_trainRand = collect_random_rollouts(
+                        env, random_policy, args.num_rand_rollouts_train,
+                        args.rand_rollout_length, dt_from_xml, args)
+                    # validation
+                    rollouts_valRand = collect_random_rollouts(
+                        env, random_policy, args.num_rand_rollouts_val,
+                        args.rand_rollout_length, dt_from_xml, args)
+
+                    # convert (rollouts --> dataset)
+                    dataset_trainRand = data_processor.convertRolloutsToDatasets(
+                        rollouts_trainRand)
+                    dataset_valRand = data_processor.convertRolloutsToDatasets(
+                        rollouts_valRand)
+
+
+                    ####for different env
+                    # training different env
+                    rollouts_trainRand_diff = collect_random_rollouts(
+                        differnt_env, random_policy_diff, args.num_rand_rollouts_train,
+                        args.rand_rollout_length, dt_from_xml, args)
+                    # validation different env
+                    rollouts_valRand_diff = collect_random_rollouts(
+                        differnt_env, random_policy_diff, args.num_rand_rollouts_val,
+                        args.rand_rollout_length, dt_from_xml, args)
+                    # convert (rollouts --> dataset)
+                    dataset_trainRand_diff = data_processor.convertRolloutsToDatasets(
+                        rollouts_trainRand_diff)
+                    dataset_valRand_diff = data_processor.convertRolloutsToDatasets(
+                        rollouts_valRand_diff)
+
+                    # concat this dataset with the existing dataset_trainRand
+                    dataset_trainRand = concat_datasets(dataset_trainRand,
+                                                        dataset_trainRand_diff)
+                    dataset_valRand = concat_datasets(dataset_valRand,
+                                                      dataset_valRand_diff)
+
+
+                else: #default
+                    rollouts_trainRand = collect_random_rollouts(
+                        env, random_policy, args.num_rand_rollouts_train,
+                        args.rand_rollout_length, dt_from_xml, args)
+                    # validation
+                    rollouts_valRand = collect_random_rollouts(
+                        env, random_policy, args.num_rand_rollouts_val,
+                        args.rand_rollout_length, dt_from_xml, args)
+                    # convert (rollouts --> dataset)
+                    dataset_trainRand = data_processor.convertRolloutsToDatasets(
+                        rollouts_trainRand)
+                    dataset_valRand = data_processor.convertRolloutsToDatasets(
+                        rollouts_valRand)
 
             #onPol train/val data
             dataset_trainOnPol = Dataset()
@@ -158,6 +232,10 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
                 EEIss_perIter=[]
                 ERss_perIter = []
                 ENEss_perIter = []
+            if use_different_env:
+                rew_perIter_diff = []
+                scores_perIter_diff = []
+
 
             #initialize counter
             counter = 0
@@ -201,6 +279,8 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
 
         ### amount of data
         numData_train_rand = get_num_data(rollouts_trainRand)
+        if use_different_env:
+            numData_train_rand = get_num_data(rollouts_trainRand)+get_num_data(rollouts_trainRand_diff)
 
         ##############################################
         ### dynamics model + controller
@@ -210,6 +290,9 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
 
         mpc_rollout = MPCRollout(env, dyn_models, random_policy,
                                  execute_sideRollouts, plot_sideRollouts, args,save_dir,counter,simulation_version,control_delta,reward_type)
+        if use_different_env:
+            mpc_rollout_diff = MPCRollout(differnt_env, dyn_models, random_policy,
+                                     execute_sideRollouts, plot_sideRollouts, args, save_dir, counter,simulation_version, control_delta, reward_type)
 
         ### init TF variables
         sess.run(tf.global_variables_initializer())
@@ -219,6 +302,11 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
         ##############################################
 
         saver = Saver(save_dir, sess)
+        if use_different_env:
+            print("use_different_env")
+            rollouts_valRand = rollouts_valRand + rollouts_valRand_diff
+            rollouts_trainRand = rollouts_trainRand + rollouts_trainRand_diff
+
         saver.save_initialData(args, rollouts_trainRand, rollouts_valRand)
 
         ##############################################
@@ -237,6 +325,8 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
             #onPolicy validation doesn't exist yet, so just make it same as rand validation
             if counter==0:
                 rollouts_valOnPol = rollouts_valRand
+
+
 
             #convert (rollouts --> dataset)
             dataset_trainOnPol = data_processor.convertRolloutsToDatasets(
@@ -351,6 +441,8 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
             list_EEIss =[]
             list_ERss = []
             list_ENEss = []
+            list_rewards_diff=[]
+            list_scores_diff=[]
 
             if not args.print_minimal:
                 print("\n#####################################")
@@ -378,6 +470,15 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
                     controller_type=args.controller_type,
                     take_exploratory_actions=False)
 
+                if use_different_env:
+                    rollout_info_diff = mpc_rollout_diff.perform_rollout(
+                        starting_state,
+                        starting_observation,
+                        counter,
+                        rollout_num,
+                        controller_type=args.controller_type,
+                        take_exploratory_actions=False)
+
 
                 ################added by Hamada####
 
@@ -393,6 +494,10 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
                     list_scores.append(rollout_info['rollout_meanFinalScore'])
                     list_mpes.append(np.mean(rollout_info['mpe_1step']))
                     rollouts_info.append(rollout_info)
+                    if use_different_env:
+                        rollouts_info.append(rollout_info_diff)
+                        list_rewards_diff.append(rollout_info_diff['rollout_rewardTotal'])
+                        list_scores_diff.append(rollout_info_diff['rollout_meanFinalScore'])
                     if simulation_version == "inverted_pendulum" or simulation_version == "reacher" :
                         list_EEIss.append(rollout_info['Final_EEI'])
                         list_ERss.append(rollout_info['Final_ER'])
@@ -425,11 +530,25 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
             dataset_trainRand = concat_datasets(dataset_trainRand,
                                                 dataset_rand_new)
 
+            if use_different_env:
+                rollouts_rand_diff = collect_random_rollouts(
+                    differnt_env, random_policy_diff, num_rand_rollouts, args.rollout_length,
+                    dt_from_xml, args)
+
+                # convert (rollouts --> dataset)
+                dataset_rand_new_diff = data_processor.convertRolloutsToDatasets(rollouts_rand_diff)
+
+                # concat this dataset with the existing dataset_trainRand
+                dataset_trainRand = concat_datasets(dataset_trainRand,
+                                                    dataset_rand_new_diff)
+
+
             #########################################################
             ### aggregate MPC rollouts into train/val
             #########################################################
 
             num_mpc_rollouts = len(rollouts_info)
+            print("length MPC rollout {}".format(num_mpc_rollouts))
             rollouts_train = []
             rollouts_val = []
 
@@ -487,6 +606,10 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
                 EEIss_perIter.append([np.mean(list_EEIss),np.std(list_EEIss)])
                 ERss_perIter.append([np.mean(list_ERss), np.std(list_ERss)])
                 ENEss_perIter.append([np.mean(list_ENEss), np.std(list_ENEss)])
+            if use_different_env:
+                # append onto rewards/scores
+                rew_perIter_diff.append([np.mean(list_rewards_diff), np.std(list_rewards_diff)])
+                scores_perIter_diff.append([np.mean(list_scores_diff), np.std(list_scores_diff)])
 
             # save
             saver_data.rollouts_rewardsPerIter = rew_perIter
@@ -496,7 +619,11 @@ def run_job(args, simulation_version,control_delta,reward_type,save_dir=None):
                 saver_data.rollouts_EEIPerIter = EEIss_perIter
                 saver_data.rollouts_ERPerIter = ERss_perIter
                 saver_data.rollouts_ENEPerIter = ENEss_perIter
-            saver.save_rollout_info(saver_data,simulation_version)
+            if use_different_env:
+                saver_data.rollouts_rewardsPerIter_diff = rew_perIter_diff
+                saver_data.rollouts_scoresPerIter_diff = scores_perIter_diff
+
+            saver.save_rollout_info(saver_data,simulation_version,use_different_env)
 
 
             ###########added by Hamada
@@ -542,6 +669,7 @@ def main():
     parser.add_argument('-frac', '--gpu_frac', type=float, default=0.9)
     parser.add_argument('--control_delta', type=int, default=1)
     parser.add_argument('--reward_type', type=str, default='st')
+    parser.add_argument('--use_different_env', action="store_true")
     general_args = parser.parse_args()
 
     #####################
@@ -556,11 +684,11 @@ def main():
     output_dir = general_args.output_dir
     if len(jobs) < 2: #by hamada
         simulation_ver =jobs[0]['job_name']
-        output_dir = '{}/{}/control_delta_{}/Controller_{}_Horizon{}_Can{}_beta{}/Iter{}_Rollout{}_Step{}/ensemble{}_num{}_depth{}/{}/{}'.format(output_dir,
+        output_dir = '{}/{}/control_delta_{}/Controller_{}_Horizon{}_Can{}_beta{}/Iter{}_Rollout{}_Step{}/ensemble{}_num{}_depth{}_time{}/{}/{}'.format(output_dir,
                                                                                     time.strftime("%Y-%m-%d"),general_args.control_delta,jobs[0]['controller_type'],
                                                                                      jobs[0]['horizon'],jobs[0]['num_control_samples'],jobs[0]['mppi_beta'],
                                                                                     jobs[0]['num_iters'],jobs[0]['num_trajectories_per_iter'],jobs[0]['rollout_length'],
-                                                                                    jobs[0]['ensemble_size'],jobs[0]['num_fc_layers'],jobs[0]['depth_fc_layers'],
+                                                                                    jobs[0]['ensemble_size'],jobs[0]['num_fc_layers'],jobs[0]['depth_fc_layers'],jobs[0]['K'],
                                                                                                                          jobs[0]['env_name'],
                                                                                     time.strftime("%Y-%m-%d_%H-%M-%S"))
 
@@ -601,7 +729,7 @@ def main():
 
         try:
 
-            run_job(args,simulation_ver, general_args.control_delta,general_args.reward_type,job['output_dir'])
+            run_job(args,simulation_ver, general_args.control_delta,general_args.reward_type,general_args.use_different_env,job['output_dir'])
 
         except (KeyboardInterrupt, SystemExit):
             print('Terminating...')

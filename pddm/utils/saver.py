@@ -122,7 +122,7 @@ class Saver:
         np.save(self.save_dir + '/losses/new_losses_iter' + str(self.iter_num)
                 + '.npy', save_data.training_lists_to_save['onPol_loss_list'])
 
-    def save_rollout_info(self, save_data,simulateion_ver):
+    def save_rollout_info(self, save_data,simulateion_ver,use_different_env):
 
         if self.iter_num==-7:
             print("Error: MUST SPECIFY ITER_NUM FOR SAVER...")
@@ -149,6 +149,11 @@ class Saver:
                     save_data.rollouts_ERPerIter)
             np.save(self.save_dir + '/rollouts_ENEPerIter.npy',
                     save_data.rollouts_ENEPerIter)
+        if use_different_env:
+            np.save(self.save_dir + '/rollouts_rewardsPerIter.npy',
+                    save_data.rollouts_rewardsPerIter_diff)
+            np.save(self.save_dir + '/rollouts_scoresPerIter.npy',
+                    save_data.rollouts_scoresPerIter_diff)
 
         #plot rewards and scores (for rollouts from all iterations thus far)
         rew = np.array(save_data.rollouts_rewardsPerIter)
@@ -168,5 +173,10 @@ class Saver:
                           self.save_dir + '/ER_perIter')
             plot_mean_std(ENE[:, 0], ENE[:, 1],
                           self.save_dir + '/ENE_perIter')
+        if use_different_env:
+            rew_diff = np.array(save_data.rollouts_rewardsPerIter_diff)
+            scores_diff = np.array(save_data.rollouts_scoresPerIter_diff)
+            plot_mean_std(rew_diff[:,0],rew_diff[:,1],self.save_dir + '/rewardsdiff_perIter')
+            plot_mean_std(scores_diff[:,0],scores_diff[:,1],self.save_dir + '/scoresdiff_perIter')
 
         self.iter_num = -7
